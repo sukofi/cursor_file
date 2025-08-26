@@ -28,39 +28,37 @@ export const AddMemberModal: React.FC<AddMemberModalProps> = ({
   const [invites, setInvites] = useState<InviteData[]>([]);
   const [isLoadingInvites, setIsLoadingInvites] = useState(false);
 
-    // 招待リンクを生成（一時的に簡素化）
+    // 招待リンクを生成（完全に無効化）
   const generateInviteLink = async () => {
     try {
-      // 一時的にデータベース操作をスキップ
-      const baseUrl = window.location.origin;
-      const link = `${baseUrl}/invite/team-${Date.now()}`;
+      // 完全にダミーリンク
+      const link = `http://localhost:5173/invite/disabled-${Date.now()}`;
       setInviteLink(link);
-      console.log('招待リンク生成（簡素化）:', link);
+      console.log('招待機能は現在無効化されています:', link);
     } catch (error) {
       console.error('招待リンク生成エラー:', error);
-      const baseUrl = window.location.origin;
-      const link = `${baseUrl}/invite/team-${Date.now()}`;
+      const link = `http://localhost:5173/invite/disabled-${Date.now()}`;
       setInviteLink(link);
     }
   };
 
-  // 招待一覧を読み込み（一時的に簡素化）
+  // 招待一覧を読み込み（完全に無効化）
   const loadInvites = async () => {
     setIsLoadingInvites(true);
     try {
-      // 一時的にダミーデータを表示
+      // 完全にダミーデータ
       const dummyInvites = [
         {
-          id: 'dummy-1',
-          email: 'test@example.com',
-          invitedBy: 'current-user',
+          id: 'disabled-1',
+          email: '機能無効化中',
+          invitedBy: 'system',
           invitedAt: new Date(),
           expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
           isUsed: false
         }
       ];
       setInvites(dummyInvites);
-      console.log('招待一覧読み込み（簡素化）:', dummyInvites);
+      console.log('招待機能は現在無効化されています');
     } catch (error) {
       console.error('招待一覧読み込みエラー:', error);
     } finally {
@@ -68,14 +66,14 @@ export const AddMemberModal: React.FC<AddMemberModalProps> = ({
     }
   };
 
-  // 招待を削除（一時的に簡素化）
+  // 招待を削除（完全に無効化）
   const deleteInvite = async (inviteId: string) => {
     if (!confirm('この招待を削除しますか？')) return;
     
     try {
-      // 一時的にダミー削除
-      console.log('招待削除（簡素化）:', inviteId);
-      alert('招待を削除しました（開発モード）');
+      // 完全に無効化
+      console.log('招待機能は現在無効化されています:', inviteId);
+      alert('招待機能は現在メンテナンス中です');
       await loadInvites();
     } catch (error) {
       console.error('招待削除エラー:', error);
@@ -103,13 +101,13 @@ export const AddMemberModal: React.FC<AddMemberModalProps> = ({
     if (email.trim() && !isSubmitting) {
       setIsSubmitting(true);
       try {
-        // 一時的にデータベース操作をスキップ
-        console.log('招待メール送信（簡素化）:', email);
-        alert(`${email} に招待メールを送信しました（開発モード）`);
+        // 完全に無効化
+        console.log('招待機能は現在無効化されています:', email);
+        alert('招待機能は現在メンテナンス中です。後でお試しください。');
         setEmail('');
       } catch (error) {
         console.error('招待作成エラー:', error);
-        alert('招待の作成中にエラーが発生しました');
+        alert('招待機能は現在利用できません');
       } finally {
         setIsSubmitting(false);
       }
@@ -238,15 +236,34 @@ export const AddMemberModal: React.FC<AddMemberModalProps> = ({
             </div>
           ) : activeTab === 'link' ? (
             <div className="space-y-4">
+              <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 mb-4">
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="ml-3">
+                    <h3 className="text-sm font-medium text-yellow-400">
+                      招待機能は現在メンテナンス中です
+                    </h3>
+                    <div className="mt-2 text-sm text-yellow-300">
+                      <p>現在、招待機能は利用できません。後でお試しください。</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-white font-semibold mb-2">招待リンク</h3>
+                  <h3 className="text-white font-semibold mb-2">招待リンク（無効化中）</h3>
                   <p className="text-gray-400 text-sm">このリンクを共有して、チームメンバーに参加してもらいます。</p>
                 </div>
                 <button 
                   onClick={generateInviteLink}
-                  className="p-2 bg-blue-500/20 border border-blue-500/30 rounded-lg text-blue-400 hover:bg-blue-500/30 transition-all duration-200"
-                  title="新しいリンクを生成"
+                  className="p-2 bg-gray-500/20 border border-gray-500/30 rounded-lg text-gray-400 cursor-not-allowed"
+                  title="機能無効化中"
+                  disabled
                 >
                   <RefreshCw className="w-4 h-4" />
                 </button>
@@ -254,14 +271,14 @@ export const AddMemberModal: React.FC<AddMemberModalProps> = ({
               <div className="bg-gray-700 rounded-lg p-4">
                 <div className="flex items-center justify-between">
                   <input type="text" value={inviteLink} readOnly className="flex-1 bg-transparent text-white text-sm mr-3 focus:outline-none" />
-                  <button onClick={handleCopyLink} className="flex items-center gap-2 bg-blue-500 text-white px-3 py-2 rounded-lg hover:bg-blue-600 transition-colors text-sm">
+                  <button onClick={handleCopyLink} className="flex items-center gap-2 bg-gray-500 text-white px-3 py-2 rounded-lg cursor-not-allowed text-sm" disabled>
                     {copied ? (<><Check className="w-4 h-4" />コピー完了</>) : (<><Copy className="w-4 h-4" />コピー</>)}
                   </button>
                 </div>
               </div>
-              <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
-                <h4 className="text-blue-400 font-semibold text-sm mb-2">リンクの有効期限</h4>
-                <p className="text-gray-300 text-sm">この招待リンクは7日間有効です。期限が切れた場合は新しいリンクを生成してください。</p>
+              <div className="bg-gray-500/10 border border-gray-500/20 rounded-lg p-4">
+                <h4 className="text-gray-400 font-semibold text-sm mb-2">機能無効化中</h4>
+                <p className="text-gray-400 text-sm">招待機能は現在メンテナンス中です。後でお試しください。</p>
               </div>
             </div>
           ) : (
