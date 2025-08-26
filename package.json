@@ -14,7 +14,9 @@
     "electron:build": "npm run build && npm run build:electron && electron-builder",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:email": "node scripts/setup-email.js",
+    "setup:env": "node scripts/setup-env.js"
   },
   "build": {
     "appId": "com.focusdashboard.app",
