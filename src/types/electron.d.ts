@@ -45,6 +45,11 @@ export interface ElectronAPI {
   dbCreateInvite: (inviteData: any) => Promise<{ success: boolean; inviteId: string }>;
   dbGetInvite: (email: string) => Promise<any | null>;
   dbMarkInviteUsed: (email: string) => Promise<{ success: boolean }>;
+  dbGetAllInvites: () => Promise<{ success: boolean; invites?: any[] }>;
+  dbGetInviteById: (inviteId: string) => Promise<{ success: boolean; invite?: any }>;
+  dbDeleteInvite: (inviteId: string) => Promise<{ success: boolean }>;
+  dbGetInvitesByUser: (userId: string) => Promise<{ success: boolean; invites?: any[] }>;
+  dbGetActiveInvites: () => Promise<{ success: boolean; invites?: any[] }>;
   
   // 作業時間管理
   dbStartWork: (userId: string, workData: any) => Promise<{ success: boolean }>;

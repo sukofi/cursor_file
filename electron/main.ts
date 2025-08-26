@@ -491,6 +491,57 @@ ipcMain.handle('db-mark-invite-used', async (_, email: string) => {
   }
 });
 
+// 招待管理機能
+ipcMain.handle('db-get-all-invites', async () => {
+  try {
+    const invites = databaseManager.getAllInvites();
+    return { success: true, invites };
+  } catch (error) {
+    console.error('招待一覧取得エラー:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+ipcMain.handle('db-get-invite-by-id', async (_, inviteId: string) => {
+  try {
+    const invite = databaseManager.getInviteById(inviteId);
+    return { success: true, invite };
+  } catch (error) {
+    console.error('招待取得エラー:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+ipcMain.handle('db-delete-invite', async (_, inviteId: string) => {
+  try {
+    const success = databaseManager.deleteInvite(inviteId);
+    return { success };
+  } catch (error) {
+    console.error('招待削除エラー:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+ipcMain.handle('db-get-invites-by-user', async (_, userId: string) => {
+  try {
+    const invites = databaseManager.getInvitesByUser(userId);
+    return { success: true, invites };
+  } catch (error) {
+    console.error('ユーザー招待一覧取得エラー:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+ipcMain.handle('db-get-active-invites', async () => {
+  try {
+    const invites = databaseManager.getActiveInvites();
+    return { success: true, invites };
+  } catch (error) {
+    console.error('アクティブ招待一覧取得エラー:', error);
+    return { success: false, error: error.message };
+  }
+});
+
 // 作業時間管理のIPCハンドラー
 ipcMain.handle('db-start-work', async (_, userId: string, workData: any) => {
   try {

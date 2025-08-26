@@ -289,6 +289,33 @@ class DatabaseManager {
     return result.changes > 0;
   }
 
+  // 招待管理機能
+  public getAllInvites(): InviteData[] {
+    const stmt = this.db.prepare('SELECT * FROM invites ORDER BY invitedAt DESC');
+    return stmt.all() as InviteData[];
+  }
+
+  public getInviteById(inviteId: string): InviteData | null {
+    const stmt = this.db.prepare('SELECT * FROM invites WHERE id = ?');
+    return stmt.get(inviteId) as InviteData | null;
+  }
+
+  public deleteInvite(inviteId: string): boolean {
+    const stmt = this.db.prepare('DELETE FROM invites WHERE id = ?');
+    const result = stmt.run(inviteId);
+    return result.changes > 0;
+  }
+
+  public getInvitesByUser(userId: string): InviteData[] {
+    const stmt = this.db.prepare('SELECT * FROM invites WHERE invitedBy = ? ORDER BY invitedAt DESC');
+    return stmt.all(userId) as InviteData[];
+  }
+
+  public getActiveInvites(): InviteData[] {
+    const stmt = this.db.prepare('SELECT * FROM invites WHERE isUsed = FALSE AND expiresAt > datetime("now") ORDER BY invitedAt DESC');
+    return stmt.all() as InviteData[];
+  }
+
 
 
   // 作業時間管理のメソッド

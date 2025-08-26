@@ -74,6 +74,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
   dbCreateInvite: (inviteData: any) => ipcRenderer.invoke('db-create-invite', inviteData),
   dbGetInvite: (email: string) => ipcRenderer.invoke('db-get-invite', email),
   dbMarkInviteUsed: (email: string) => ipcRenderer.invoke('db-mark-invite-used', email),
+  dbGetAllInvites: () => ipcRenderer.invoke('db-get-all-invites'),
+  dbGetInviteById: (inviteId: string) => ipcRenderer.invoke('db-get-invite-by-id', inviteId),
+  dbDeleteInvite: (inviteId: string) => ipcRenderer.invoke('db-delete-invite', inviteId),
+  dbGetInvitesByUser: (userId: string) => ipcRenderer.invoke('db-get-invites-by-user', userId),
+  dbGetActiveInvites: () => ipcRenderer.invoke('db-get-active-invites'),
   dbClearAllData: () => ipcRenderer.invoke('db-clear-all-data'),
   dbCleanDummyData: () => ipcRenderer.invoke('db-clean-dummy-data'),
   
