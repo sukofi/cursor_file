@@ -903,7 +903,7 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
       avatar: getAvatarFromProfile(),
       lastUpdate: new Date(),
       dailyStats: {
-        totalHours: Math.max(actualWorkTime / 60, 0.1), // 実際の作業時間を時間に変換
+        totalHours: Math.max(actualWorkTime / 60, 0), // 実際の作業時間を時間に変換（最小値0に変更）
         focusHours: Math.max(focusMinutes / 60, 0), // 分を時間に変換
         breakHours: Math.max(breakMinutes / 60, 0) // 分を時間に変換
       },
@@ -918,7 +918,14 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
 
     console.log('useElectronActivityTracker: generateTeamMember - workStatus:', teamMember.workStatus, 'metrics.workStatus:', metrics.workStatus);
 
-    console.log('useElectronActivityTracker: generateTeamMember - workStatus:', teamMember.workStatus, 'focusScore:', adjustedFocusScore, 'totalMinutes:', totalMinutes);
+    console.log('useElectronActivityTracker: generateTeamMember - 時間計算詳細:', {
+      workStatus: teamMember.workStatus,
+      workStartTime: workStartTimeRef.current ? new Date(workStartTimeRef.current).toLocaleTimeString() : '未開始',
+      actualWorkTime: Math.round(actualWorkTime * 100) / 100, // 分単位（小数点2桁）
+      totalHours: Math.round((actualWorkTime / 60) * 100) / 100, // 時間単位（小数点2桁）
+      focusMinutes: focusMinutes,
+      breakMinutes: breakMinutes
+    });
     return teamMember;
   };
 
