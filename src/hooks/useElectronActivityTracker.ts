@@ -331,6 +331,7 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
       };
       console.log('useElectronActivityTracker: 作業開始 - 新しい状態:', newMetrics.workStatus, 'currentApp:', newMetrics.currentApp);
       console.log('useElectronActivityTracker: 作業開始 - 新しいmetrics全体:', newMetrics);
+      console.log('useElectronActivityTracker: 作業開始時間設定:', new Date(now).toLocaleTimeString());
       return newMetrics;
     });
   };
@@ -626,12 +627,6 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
       // 日付変更をチェック
       checkAndResetDailyStats();
       
-      // 作業状態が休憩または終了の場合は集中度を0に設定
-      if (metrics.workStatus === 'break' || metrics.workStatus === 'finished') {
-        setCurrentFocusScore(0);
-        return;
-      }
-
       const now = Date.now();
       const timeSinceLastActivity = now - lastActivityTime.current;
       
@@ -663,9 +658,12 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
         });
       }
       
-      // 作業中の場合のみ時間を計測
-      if (metrics.workStatus === 'working') {
-        // アイドル時間の計算
+      // 作業状態に応じた処理
+      if (metrics.workStatus === 'break' || metrics.workStatus === 'finished') {
+        setCurrentFocusScore(0);
+        return;
+      } else if (metrics.workStatus === 'working') {
+        // 作業中の場合のみ時間を計測
         const isIdle = timeSinceLastActivity > 30000; // 30秒以上活動なし
         
         setMetrics(prev => {
@@ -783,7 +781,7 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
         clearInterval(intervalRef.current);
       }
     };
-  }, [focusSettings]); // appUsageMapを依存関係から削除
+  }, [focusSettings, metrics.workStatus]); // workStatusの変更を監視
 
   // 期間変更時にfocusHistoryを更新
   useEffect(() => {
