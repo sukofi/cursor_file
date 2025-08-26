@@ -324,12 +324,46 @@ class DatabaseManager {
       VALUES (?, ?, ?, ?, ?, ?)
     `);
     
-    // DateオブジェクトをISO文字列に変換
-    const invitedAt = invite.invitedAt instanceof Date ? invite.invitedAt.toISOString() : invite.invitedAt;
-    const expiresAt = invite.expiresAt instanceof Date ? invite.expiresAt.toISOString() : invite.expiresAt;
+    // 安全なDate変換
+    let invitedAt: string;
+    let expiresAt: string;
     
-    stmt.run(id, invite.email, invite.invitedBy, invitedAt, expiresAt, invite.isUsed);
-    return id;
+    try {
+      // invitedAtの処理
+      if (invite.invitedAt instanceof Date) {
+        invitedAt = invite.invitedAt.toISOString();
+      } else if (typeof invite.invitedAt === 'string') {
+        invitedAt = invite.invitedAt;
+      } else {
+        invitedAt = new Date().toISOString();
+      }
+      
+      // expiresAtの処理
+      if (invite.expiresAt instanceof Date) {
+        expiresAt = invite.expiresAt.toISOString();
+      } else if (typeof invite.expiresAt === 'string') {
+        expiresAt = invite.expiresAt;
+      } else {
+        expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+      }
+      
+      console.log('招待データ作成:', {
+        id,
+        email: invite.email,
+        invitedBy: invite.invitedBy,
+        invitedAt,
+        expiresAt,
+        isUsed: invite.isUsed
+      });
+      
+      stmt.run(id, invite.email, invite.invitedBy, invitedAt, expiresAt, invite.isUsed ? 1 : 0);
+      return id;
+      
+    } catch (error) {
+      console.error('招待作成エラー（詳細）:', error);
+      console.error('招待データ:', invite);
+      throw error;
+    }
   }
 
   public getInviteByEmail(email: string): InviteData | null {
