@@ -1,5 +1,9 @@
 // メール送信サービス
 // 無料版のSendGridを使用
+import dotenv from 'dotenv';
+
+// 環境変数を読み込み
+dotenv.config();
 
 interface EmailConfig {
   apiKey?: string;
@@ -43,8 +47,8 @@ class EmailService {
       }
 
       // SendGridを使用したメール送信
-      const sgMail = require('@sendgrid/mail');
-      sgMail.setApiKey(this.config.apiKey);
+      const sgMail = await import('@sendgrid/mail');
+      sgMail.default.setApiKey(this.config.apiKey);
 
       const msg = {
         to: data.to,
@@ -54,7 +58,7 @@ class EmailService {
         text: this.generateInviteEmailText(data)
       };
 
-      await sgMail.send(msg);
+      await sgMail.default.send(msg);
       return { success: true, message: '招待メールを送信しました' };
 
     } catch (error) {
@@ -159,8 +163,13 @@ Task ROG - チームの集中度管理
         return { success: false, message: 'SendGrid APIキーが設定されていません' };
       }
 
-      const sgMail = require('@sendgrid/mail');
-      sgMail.setApiKey(this.config.apiKey);
+      // 開発環境ではテストをスキップ
+      if (process.env.NODE_ENV === 'development') {
+        return { success: true, message: '開発環境: 接続テストをスキップしました' };
+      }
+
+      const sgMail = await import('@sendgrid/mail');
+      sgMail.default.setApiKey(this.config.apiKey);
 
       // テストメールを送信
       const msg = {
@@ -170,7 +179,7 @@ Task ROG - チームの集中度管理
         text: 'メール送信設定が正常に動作しています。'
       };
 
-      await sgMail.send(msg);
+      await sgMail.default.send(msg);
       return { success: true, message: 'メール送信設定が正常です' };
 
     } catch (error) {

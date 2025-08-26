@@ -5,7 +5,7 @@
  * 使用方法: node scripts/setup-email.js
  */
 
-const { emailService } = require('../src/services/emailService.ts');
+import { emailService } from '../src/services/emailService.ts';
 
 async function testEmailSetup() {
   console.log('📧 メール送信サービス設定テスト');
@@ -58,8 +58,4 @@ async function testEmailSetup() {
 }
 
 // スクリプト実行
-if (require.main === module) {
-  testEmailSetup().catch(console.error);
-}
-
-module.exports = { testEmailSetup };
+testEmailSetup().catch(console.error);
