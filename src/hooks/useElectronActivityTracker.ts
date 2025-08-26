@@ -263,6 +263,7 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
 
   const lastActivityTime = useRef(Date.now());
   const startTime = useRef(Date.now());
+  const workStartTimeRef = useRef<number | null>(null); // 作業開始時間を正確に管理
   const mousePositionRef = useRef({ x: 0, y: 0 });
   const intervalRef = useRef<NodeJS.Timeout>();
   const lastApp = useRef<string>('');
@@ -308,12 +309,15 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
       console.error('useElectronActivityTracker: データベース記録エラー:', error);
     }
     
+    const now = Date.now();
+    workStartTimeRef.current = now; // 作業開始時間を記録
+    
     setMetrics(prev => {
       console.log('useElectronActivityTracker: 作業開始 - 前の状態:', prev.workStatus);
       const newMetrics = {
         ...prev,
         isWorking: true,
-        workStartTime: Date.now(),
+        workStartTime: now,
         workStatus: 'working' as const,
         currentApp: currentAppName,
         currentWindowTitle: currentWindowTitle
@@ -336,6 +340,8 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
     } catch (error) {
       console.error('useElectronActivityTracker: データベース記録エラー:', error);
     }
+    
+    workStartTimeRef.current = null; // 作業開始時間をリセット
     
     setMetrics(prev => {
       console.log('useElectronActivityTracker: 休憩開始 - 前の状態:', prev.workStatus);
@@ -366,6 +372,8 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
     } catch (error) {
       console.error('useElectronActivityTracker: データベース記録エラー:', error);
     }
+    
+    workStartTimeRef.current = null; // 作業開始時間をリセット
     
     setMetrics(prev => {
       console.log('useElectronActivityTracker: 作業終了 - 前の状態:', prev.workStatus);
@@ -651,8 +659,8 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
       setMetrics(prev => {
         const newMetrics = {
           ...prev,
-          activeTime: prev.activeTime + (isIdle ? 0 : 0.0167), // 1分 = 60秒なので、1秒 = 0.0167分
-          idleTime: prev.idleTime + (isIdle ? 0.0167 : 0) // 1分 = 60秒なので、1秒 = 0.0167分
+          activeTime: prev.activeTime + (isIdle ? 0 : 1/60), // 1秒 = 1/60分（正確な計算）
+          idleTime: prev.idleTime + (isIdle ? 1/60 : 0) // 1秒 = 1/60分（正確な計算）
         };
 
         // アプリ使用時間の更新（作業中の場合のみ）
@@ -660,7 +668,7 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
           setAppUsageMap(currentMap => {
             const newMap = new Map(currentMap);
             const currentTime = newMap.get(prev.currentApp) || 0;
-            newMap.set(prev.currentApp, currentTime + 0.0167); // 1分 = 60秒なので、1秒 = 0.0167分
+            newMap.set(prev.currentApp, currentTime + 1/60); // 1秒 = 1/60分（正確な計算）
             return newMap;
           });
         }
@@ -833,6 +841,13 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
     // 日付変更をチェック
     checkAndResetDailyStats();
     
+    // 作業開始時間からの実際の経過時間を計算
+    let actualWorkTime = 0;
+    if (workStartTimeRef.current && metrics.workStatus === 'working') {
+      const now = Date.now();
+      actualWorkTime = (now - workStartTimeRef.current) / (1000 * 60); // 分単位
+    }
+    
     // 時間を分単位で計算（activeTimeとidleTimeは既に分単位）
     const totalMinutes = Math.round((metrics.activeTime + metrics.idleTime) * 60);
     const focusMinutes = Math.round(metrics.activeTime * 60);
@@ -875,7 +890,7 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
       avatar: getAvatarFromProfile(),
       lastUpdate: new Date(),
       dailyStats: {
-        totalHours: Math.max(totalMinutes / 60, 0.1), // 分を時間に変換
+        totalHours: Math.max(actualWorkTime / 60, 0.1), // 実際の作業時間を時間に変換
         focusHours: Math.max(focusMinutes / 60, 0), // 分を時間に変換
         breakHours: Math.max(breakMinutes / 60, 0) // 分を時間に変換
       },
