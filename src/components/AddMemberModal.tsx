@@ -32,13 +32,13 @@ export const AddMemberModal: React.FC<AddMemberModalProps> = ({
   const generateInviteLink = async () => {
     try {
       const currentUserId = localStorage.getItem('userId');
-      const inviteData = {
-        email: 'general-invite',
-        invitedBy: currentUserId || 'current-user',
-        invitedAt: new Date(),
-        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7日後
-        isUsed: false
-      };
+              const inviteData = {
+          email: 'general-invite',
+          invitedBy: currentUserId || 'current-user',
+          invitedAt: new Date(),
+          expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7日後
+          isUsed: 0 // booleanではなく数値で送信
+        };
       
       if (window.electronAPI?.dbCreateInvite) {
         const result = await window.electronAPI.dbCreateInvite(inviteData);
@@ -121,7 +121,7 @@ export const AddMemberModal: React.FC<AddMemberModalProps> = ({
           invitedBy: currentUserId || 'current-user',
           invitedAt: new Date(),
           expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7日後
-          isUsed: false
+          isUsed: 0 // booleanではなく数値で送信
         };
         
         if (window.electronAPI?.dbCreateInvite) {

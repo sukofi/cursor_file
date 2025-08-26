@@ -356,7 +356,10 @@ class DatabaseManager {
         isUsed: invite.isUsed
       });
       
-      stmt.run(id, invite.email, invite.invitedBy, invitedAt, expiresAt, invite.isUsed ? 1 : 0);
+      // isUsedを数値に変換
+      const isUsedValue = invite.isUsed === true ? 1 : invite.isUsed === false ? 0 : Number(invite.isUsed);
+      
+      stmt.run(id, invite.email, invite.invitedBy, invitedAt, expiresAt, isUsedValue);
       return id;
       
     } catch (error) {
