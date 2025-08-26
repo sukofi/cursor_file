@@ -28,31 +28,14 @@ export const AddMemberModal: React.FC<AddMemberModalProps> = ({
   const [invites, setInvites] = useState<InviteData[]>([]);
   const [isLoadingInvites, setIsLoadingInvites] = useState(false);
 
-  // 招待リンクを生成
+    // 招待リンクを生成（一時的に簡素化）
   const generateInviteLink = async () => {
     try {
-      const currentUserId = localStorage.getItem('userId');
-              const inviteData = {
-          email: 'general-invite',
-          invitedBy: currentUserId || 'current-user',
-          invitedAt: new Date(),
-          expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7日後
-          isUsed: 0 // booleanではなく数値で送信
-        };
-      
-      if (window.electronAPI?.dbCreateInvite) {
-        const result = await window.electronAPI.dbCreateInvite(inviteData);
-        if (result.success) {
-          const baseUrl = window.location.origin;
-          const link = `${baseUrl}/invite/${result.inviteId}`;
-          setInviteLink(link);
-        }
-      } else {
-        // フォールバック用のリンク
-        const baseUrl = window.location.origin;
-        const link = `${baseUrl}/invite/team-${Date.now()}`;
-        setInviteLink(link);
-      }
+      // 一時的にデータベース操作をスキップ
+      const baseUrl = window.location.origin;
+      const link = `${baseUrl}/invite/team-${Date.now()}`;
+      setInviteLink(link);
+      console.log('招待リンク生成（簡素化）:', link);
     } catch (error) {
       console.error('招待リンク生成エラー:', error);
       const baseUrl = window.location.origin;
@@ -61,16 +44,23 @@ export const AddMemberModal: React.FC<AddMemberModalProps> = ({
     }
   };
 
-  // 招待一覧を読み込み
+  // 招待一覧を読み込み（一時的に簡素化）
   const loadInvites = async () => {
     setIsLoadingInvites(true);
     try {
-      if (window.electronAPI?.dbGetAllInvites) {
-        const result = await window.electronAPI.dbGetAllInvites();
-        if (result.success) {
-          setInvites(result.invites || []);
+      // 一時的にダミーデータを表示
+      const dummyInvites = [
+        {
+          id: 'dummy-1',
+          email: 'test@example.com',
+          invitedBy: 'current-user',
+          invitedAt: new Date(),
+          expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+          isUsed: false
         }
-      }
+      ];
+      setInvites(dummyInvites);
+      console.log('招待一覧読み込み（簡素化）:', dummyInvites);
     } catch (error) {
       console.error('招待一覧読み込みエラー:', error);
     } finally {
@@ -78,17 +68,15 @@ export const AddMemberModal: React.FC<AddMemberModalProps> = ({
     }
   };
 
-  // 招待を削除
+  // 招待を削除（一時的に簡素化）
   const deleteInvite = async (inviteId: string) => {
     if (!confirm('この招待を削除しますか？')) return;
     
     try {
-      if (window.electronAPI?.dbDeleteInvite) {
-        const result = await window.electronAPI.dbDeleteInvite(inviteId);
-        if (result.success) {
-          await loadInvites();
-        }
-      }
+      // 一時的にダミー削除
+      console.log('招待削除（簡素化）:', inviteId);
+      alert('招待を削除しました（開発モード）');
+      await loadInvites();
     } catch (error) {
       console.error('招待削除エラー:', error);
     }
@@ -115,31 +103,10 @@ export const AddMemberModal: React.FC<AddMemberModalProps> = ({
     if (email.trim() && !isSubmitting) {
       setIsSubmitting(true);
       try {
-        const currentUserId = localStorage.getItem('userId');
-        const inviteData = {
-          email: email.trim(),
-          invitedBy: currentUserId || 'current-user',
-          invitedAt: new Date(),
-          expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7日後
-          isUsed: 0 // booleanではなく数値で送信
-        };
-        
-        if (window.electronAPI?.dbCreateInvite) {
-          const result = await window.electronAPI.dbCreateInvite(inviteData);
-          if (result.success) {
-            // 実際のメール送信処理（本番環境では実装が必要）
-            await sendInviteEmail(email.trim(), result.inviteId);
-            alert(`${email} に招待メールを送信しました`);
-            setEmail('');
-            await loadInvites(); // 招待一覧を更新
-          } else {
-            alert('招待の作成に失敗しました');
-          }
-        } else {
-          console.log('招待メールを送信:', email);
-          alert(`${email} に招待メールを送信しました`);
-          setEmail('');
-        }
+        // 一時的にデータベース操作をスキップ
+        console.log('招待メール送信（簡素化）:', email);
+        alert(`${email} に招待メールを送信しました（開発モード）`);
+        setEmail('');
       } catch (error) {
         console.error('招待作成エラー:', error);
         alert('招待の作成中にエラーが発生しました');
