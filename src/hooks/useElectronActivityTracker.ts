@@ -312,6 +312,13 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
     const now = Date.now();
     workStartTimeRef.current = now; // 作業開始時間を記録
     
+    // 作業開始時に時間をリセット
+    setMetrics(prev => ({
+      ...prev,
+      activeTime: 0,
+      idleTime: 0
+    }));
+    
     setMetrics(prev => {
       console.log('useElectronActivityTracker: 作業開始 - 前の状態:', prev.workStatus);
       const newMetrics = {
@@ -649,32 +656,38 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
           currentApp: metrics.currentApp,
           workStatus: metrics.workStatus,
           timeSinceLastActivity: Math.round(timeSinceLastActivity / 1000),
-          focusScore: Math.round(newFocusScore)
+          focusScore: Math.round(newFocusScore),
+          activeTime: Math.round(metrics.activeTime * 60), // 分単位で表示
+          idleTime: Math.round(metrics.idleTime * 60), // 分単位で表示
+          workStartTime: workStartTimeRef.current ? new Date(workStartTimeRef.current).toLocaleTimeString() : '未開始'
         });
       }
       
-      // アイドル時間の計算
-      const isIdle = timeSinceLastActivity > 30000; // 30秒以上活動なし
-      
-      setMetrics(prev => {
-        const newMetrics = {
-          ...prev,
-          activeTime: prev.activeTime + (isIdle ? 0 : 1/60), // 1秒 = 1/60分（正確な計算）
-          idleTime: prev.idleTime + (isIdle ? 1/60 : 0) // 1秒 = 1/60分（正確な計算）
-        };
+      // 作業中の場合のみ時間を計測
+      if (metrics.workStatus === 'working') {
+        // アイドル時間の計算
+        const isIdle = timeSinceLastActivity > 30000; // 30秒以上活動なし
+        
+        setMetrics(prev => {
+          const newMetrics = {
+            ...prev,
+            activeTime: prev.activeTime + (isIdle ? 0 : 1/60), // 1秒 = 1/60分（正確な計算）
+            idleTime: prev.idleTime + (isIdle ? 1/60 : 0) // 1秒 = 1/60分（正確な計算）
+          };
 
-        // アプリ使用時間の更新（作業中の場合のみ）
-        if (prev.currentApp && prev.workStatus === 'working') {
-          setAppUsageMap(currentMap => {
-            const newMap = new Map(currentMap);
-            const currentTime = newMap.get(prev.currentApp) || 0;
-            newMap.set(prev.currentApp, currentTime + 1/60); // 1秒 = 1/60分（正確な計算）
-            return newMap;
-          });
-        }
+          // アプリ使用時間の更新（作業中の場合のみ）
+          if (prev.currentApp && prev.workStatus === 'working') {
+            setAppUsageMap(currentMap => {
+              const newMap = new Map(currentMap);
+              const currentTime = newMap.get(prev.currentApp) || 0;
+              newMap.set(prev.currentApp, currentTime + 1/60); // 1秒 = 1/60分（正確な計算）
+              return newMap;
+            });
+          }
 
-        return newMetrics;
-      });
+          return newMetrics;
+        });
+      }
 
       setCurrentFocusScore(newFocusScore);
 
