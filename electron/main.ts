@@ -468,7 +468,14 @@ ipcMain.handle('db-save-stats', async (_, statsData: any) => {
 
 ipcMain.handle('db-create-invite', async (_, inviteData: any) => {
   try {
-    const inviteId = databaseManager.createInvite(inviteData);
+    // Dateオブジェクトを適切に処理
+    const processedInviteData = {
+      ...inviteData,
+      invitedAt: new Date(inviteData.invitedAt),
+      expiresAt: new Date(inviteData.expiresAt)
+    };
+    
+    const inviteId = databaseManager.createInvite(processedInviteData);
     return { success: true, inviteId };
   } catch (error) {
     console.error('招待作成エラー:', error);
