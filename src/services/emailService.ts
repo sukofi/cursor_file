@@ -1,9 +1,22 @@
 // メール送信サービス
 // 無料版のSendGridを使用
-import dotenv from 'dotenv';
 
-// 環境変数を読み込み
-dotenv.config();
+// 環境変数を安全に読み込み（ブラウザ環境対応）
+const getEnvVar = (key: string, defaultValue?: string): string | undefined => {
+  // Electron環境ではwindow.electronAPIを使用
+  if (typeof window !== 'undefined' && window.electronAPI?.getEnv) {
+    return window.electronAPI.getEnv(key) || defaultValue;
+  }
+  // フォールバック: process.env
+  if (typeof process !== 'undefined' && process.env) {
+    return process.env[key] || defaultValue;
+  }
+  // フォールバック: import.meta.env
+  if (typeof import.meta !== 'undefined' && import.meta.env) {
+    return import.meta.env[key] || defaultValue;
+  }
+  return defaultValue;
+};
 
 interface EmailConfig {
   apiKey?: string;
@@ -23,9 +36,9 @@ class EmailService {
 
   constructor(config: EmailConfig = {}) {
     this.config = {
-      apiKey: process.env.SENDGRID_API_KEY || config.apiKey,
-      fromEmail: process.env.MAIL_FROM || config.fromEmail || 'noreply@taskrog.com',
-      appUrl: process.env.APP_URL || config.appUrl || 'http://localhost:5173',
+      apiKey: getEnvVar('SENDGRID_API_KEY') || config.apiKey,
+      fromEmail: getEnvVar('MAIL_FROM') || config.fromEmail || 'noreply@taskrog.com',
+      appUrl: getEnvVar('APP_URL') || config.appUrl || 'http://localhost:5173',
       ...config
     };
   }
@@ -34,7 +47,7 @@ class EmailService {
   async sendInviteEmail(data: InviteEmailData): Promise<{ success: boolean; message?: string }> {
     try {
       // 開発環境ではメール送信をシミュレート
-      if (process.env.NODE_ENV === 'development' || !this.config.apiKey) {
+      if (getEnvVar('NODE_ENV') === 'development' || !this.config.apiKey) {
         console.log('開発環境: メール送信をシミュレート');
         console.log('招待メール送信:', {
           to: data.to,
@@ -164,7 +177,7 @@ Task ROG - チームの集中度管理
       }
 
       // 開発環境ではテストをスキップ
-      if (process.env.NODE_ENV === 'development') {
+      if (getEnvVar('NODE_ENV') === 'development') {
         return { success: true, message: '開発環境: 接続テストをスキップしました' };
       }
 

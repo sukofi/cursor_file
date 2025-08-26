@@ -2,6 +2,10 @@ import { contextBridge, ipcRenderer } from 'electron';
 
 // レンダラープロセスで使用するAPIを定義
 const electronAPI = {
+  // 環境変数
+  getEnv: (key: string) => process.env[key],
+  
+  // アクティビティトラッキング関連
   // アクティビティトラッキング関連
   getCurrentActivity: () => ipcRenderer.invoke('get-current-activity'),
   startTracking: () => ipcRenderer.invoke('start-tracking'),

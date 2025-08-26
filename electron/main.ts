@@ -3,6 +3,10 @@ import activeWin from 'active-win';
 import * as path from 'path';
 import { exec } from 'child_process';
 import { databaseManager } from './database';
+import dotenv from 'dotenv';
+
+// 環境変数を読み込み
+dotenv.config();
 
 // promisifyの代替実装
 function promisifyExec(command: string): Promise<{ stdout: string; stderr: string }> {

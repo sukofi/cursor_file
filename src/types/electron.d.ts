@@ -6,6 +6,9 @@ export interface ActivityData {
 }
 
 export interface ElectronAPI {
+  // 環境変数
+  getEnv: (key: string) => string | undefined;
+  
   // 認証関連
   authLogin: (email: string, password: string) => Promise<{ success: boolean; user?: any; message?: string }>;
   authRegister: (userData: { name: string; email: string; password: string }) => Promise<{ success: boolean; message?: string; userId?: string }>;
