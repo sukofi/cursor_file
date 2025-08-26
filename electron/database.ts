@@ -26,7 +26,12 @@ class DatabaseManager {
         createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
         lastLoginAt DATETIME,
         resetToken TEXT,
-        resetTokenExpires DATETIME
+        resetTokenExpires DATETIME,
+        workStatus TEXT DEFAULT 'finished',
+        currentActivity TEXT DEFAULT '',
+        lastWorkStart DATETIME,
+        lastBreakStart DATETIME,
+        lastWorkEnd DATETIME
       )
     `);
 
@@ -83,8 +88,54 @@ class DatabaseManager {
       )
     `);
 
+    // 既存のテーブルにカラムを追加（マイグレーション）
+    this.migrateDatabase();
+    
     // 初期管理者ユーザーを作成
     this.createInitialAdmin();
+  }
+
+  private migrateDatabase() {
+    try {
+      // workStatusカラムの追加
+      this.db.exec('ALTER TABLE users ADD COLUMN workStatus TEXT DEFAULT "finished"');
+      console.log('✅ workStatusカラムを追加しました');
+    } catch (error) {
+      // カラムが既に存在する場合はエラーを無視
+      console.log('ℹ️ workStatusカラムは既に存在します');
+    }
+
+    try {
+      // currentActivityカラムの追加
+      this.db.exec('ALTER TABLE users ADD COLUMN currentActivity TEXT DEFAULT ""');
+      console.log('✅ currentActivityカラムを追加しました');
+    } catch (error) {
+      console.log('ℹ️ currentActivityカラムは既に存在します');
+    }
+
+    try {
+      // lastWorkStartカラムの追加
+      this.db.exec('ALTER TABLE users ADD COLUMN lastWorkStart DATETIME');
+      console.log('✅ lastWorkStartカラムを追加しました');
+    } catch (error) {
+      console.log('ℹ️ lastWorkStartカラムは既に存在します');
+    }
+
+    try {
+      // lastBreakStartカラムの追加
+      this.db.exec('ALTER TABLE users ADD COLUMN lastBreakStart DATETIME');
+      console.log('✅ lastBreakStartカラムを追加しました');
+    } catch (error) {
+      console.log('ℹ️ lastBreakStartカラムは既に存在します');
+    }
+
+    try {
+      // lastWorkEndカラムの追加
+      this.db.exec('ALTER TABLE users ADD COLUMN lastWorkEnd DATETIME');
+      console.log('✅ lastWorkEndカラムを追加しました');
+    } catch (error) {
+      console.log('ℹ️ lastWorkEndカラムは既に存在します');
+    }
   }
 
   private createInitialAdmin() {
@@ -273,8 +324,11 @@ class DatabaseManager {
       VALUES (?, ?, ?, ?, ?, ?)
     `);
     
-    stmt.run(id, invite.email, invite.invitedBy, invite.invitedAt.toISOString(), 
-             invite.expiresAt.toISOString(), invite.isUsed);
+    // DateオブジェクトをISO文字列に変換
+    const invitedAt = invite.invitedAt instanceof Date ? invite.invitedAt.toISOString() : invite.invitedAt;
+    const expiresAt = invite.expiresAt instanceof Date ? invite.expiresAt.toISOString() : invite.expiresAt;
+    
+    stmt.run(id, invite.email, invite.invitedBy, invitedAt, expiresAt, invite.isUsed);
     return id;
   }
 
