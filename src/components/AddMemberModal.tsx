@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Mail, Link, Copy, Check, Crown, RefreshCw, Users, Clock } from 'lucide-react';
+import { emailService } from '../services/emailService';
 
 interface AddMemberModalProps {
   isOpen: boolean;
@@ -148,28 +149,28 @@ export const AddMemberModal: React.FC<AddMemberModalProps> = ({
     }
   };
 
-  // メール送信機能（本番環境では実際のメールサービスを使用）
+  // メール送信機能（無料のSendGridサービスを使用）
   const sendInviteEmail = async (email: string, inviteId: string) => {
     try {
       const baseUrl = window.location.origin;
       const inviteUrl = `${baseUrl}/invite/${inviteId}`;
       
-      // 本番環境では以下のようなメール送信サービスを使用
-      // - SendGrid
-      // - Mailgun
-      // - AWS SES
-      // - Nodemailer with SMTP
+      // 現在のユーザー名を取得
+      const currentUserId = localStorage.getItem('userId');
+      const currentUserName = localStorage.getItem('userName') || 'チームメンバー';
       
-      console.log('招待メール送信:', {
+      const result = await emailService.sendInviteEmail({
         to: email,
-        subject: 'チームへの招待',
-        body: `あなたがチームに招待されました。以下のリンクから参加してください：\n\n${inviteUrl}\n\nこのリンクは7日間有効です。`
+        inviteUrl,
+        invitedBy: currentUserName,
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
       });
       
-      // 開発環境ではメール送信をシミュレート
-      if (process.env.NODE_ENV === 'development') {
-        console.log('開発環境: メール送信をシミュレート');
+      if (!result.success) {
+        throw new Error(result.message || 'メール送信に失敗しました');
       }
+      
+      return result;
     } catch (error) {
       console.error('メール送信エラー:', error);
       throw error;
