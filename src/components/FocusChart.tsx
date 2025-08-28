@@ -113,38 +113,53 @@ export const FocusChart: React.FC<FocusChartProps> = ({
           </g>
         ))}
         
-        {/* データライン */}
-        <polyline
-          fill="none"
-          stroke="rgba(59, 130, 246, 0.8)"
-          strokeWidth="3"
-          points={chartData.map((point, index) => 
-            `${(index / (chartData.length - 1)) * 100}%,${100 - point.score}%`
-          ).join(' ')}
-        />
-        
-        {/* データポイント */}
-        {chartData.map((point, index) => (
-          <g key={index}>
-            <circle
-              cx={`${(index / (data.length - 1)) * 100}%`}
-              cy={`${100 - point.score}%`}
-              r="6"
-              fill={getPointColor(point.score)}
-              stroke="white"
-              strokeWidth="2"
-              className="drop-shadow-lg"
-            />
-            <circle
-              cx={`${(index / (data.length - 1)) * 100}%`}
-              cy={`${100 - point.score}%`}
-              r="12"
-              fill={getPointColor(point.score)}
-              opacity="0.2"
-              className="animate-pulse"
-            />
-          </g>
-        ))}
+        {/* バーグラフ */}
+        {chartData.map((point, index) => {
+          const barWidth = 100 / chartData.length * 0.8; // バーの幅（80%）
+          const barSpacing = 100 / chartData.length * 0.2; // バー間のスペース（20%）
+          const barX = (index / chartData.length) * 100 + barSpacing / 2;
+          const barHeight = point.score;
+          const barY = 100 - barHeight;
+          
+          return (
+            <g key={index}>
+              {/* バーの背景 */}
+              <rect
+                x={`${barX}%`}
+                y="0%"
+                width={`${barWidth}%`}
+                height="100%"
+                fill="rgba(255,255,255,0.05)"
+                rx="2"
+              />
+              {/* メインバー */}
+              <rect
+                x={`${barX}%`}
+                y={`${barY}%`}
+                width={`${barWidth}%`}
+                height={`${barHeight}%`}
+                fill={getPointColor(point.score)}
+                rx="2"
+                className="drop-shadow-lg transition-all duration-300"
+                style={{
+                  filter: `drop-shadow(0 0 8px ${getPointColor(point.score)})`,
+                }}
+              />
+              {/* バーの上部に数値を表示 */}
+              <text
+                x={`${barX + barWidth / 2}%`}
+                y={`${barY - 2}%`}
+                textAnchor="middle"
+                fill="white"
+                fontSize="10"
+                fontWeight="bold"
+                className="drop-shadow-lg"
+              >
+                {Math.round(point.score)}
+              </text>
+            </g>
+          );
+        })}
       </svg>
       
       {/* X軸ラベル */}
