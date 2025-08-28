@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { LoginScreen } from './components/LoginScreen';
 import { Dashboard } from './components/Dashboard';
 import { DetailView } from './components/DetailView';
+import { StatusSelectionModal } from './components/StatusSelectionModal';
 import { TeamMember } from './types';
 import { useElectronActivityTracker } from './hooks/useElectronActivityTracker';
 
@@ -12,6 +13,7 @@ function App() {
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [isAdmin, setIsAdmin] = useState(false); // 管理者権限の状態
+  const [showStatusSelection, setShowStatusSelection] = useState(false); // ステータス選択モーダルの表示状態
 
   const [lastResetDate, setLastResetDate] = useState<string>('');
   const [settings, setSettings] = useState(() => {
@@ -384,6 +386,9 @@ function App() {
       setProfile(defaultProfile);
       localStorage.setItem('userProfile', JSON.stringify(defaultProfile));
     }
+    
+    // ログイン後にステータス選択モーダルを表示
+    setShowStatusSelection(true);
   };
 
   const handleMemberSelect = (member: TeamMember) => {
@@ -392,6 +397,24 @@ function App() {
 
   const handleBackToDashboard = () => {
     setSelectedMember(null);
+  };
+
+  // ステータス選択モーダルのハンドラー
+  const handleStatusSelection = (status: 'working' | 'break' | 'finished') => {
+    console.log('App: ステータス選択:', status);
+    setShowStatusSelection(false);
+    
+    switch (status) {
+      case 'working':
+        startWork();
+        break;
+      case 'break':
+        startBreak();
+        break;
+      case 'finished':
+        finishWork();
+        break;
+    }
   };
 
   const handleLogout = () => {
@@ -558,20 +581,29 @@ function App() {
   console.log('App: Dashboardに渡すtrackedUser全体:', trackedUser);
   
   return (
-    <Dashboard 
-      teamMembers={teamMembers}
-      onMemberSelect={handleMemberSelect}
-      onGoalUpdate={handleGoalUpdate}
-      onYearlyGoalUpdate={handleYearlyGoalUpdate}
-      isAdmin={isAdmin}
-      onDeleteMember={handleDeleteMember}
-      onCleanDummyData={handleCleanDummyData}
-      onClearAllData={handleClearAllData}
-      trackedUser={trackedUser}
-      onWorkStart={startWork}
-      onWorkBreak={startBreak}
-      onWorkFinish={finishWork}
-    />
+    <>
+      <Dashboard 
+        teamMembers={teamMembers}
+        onMemberSelect={handleMemberSelect}
+        onGoalUpdate={handleGoalUpdate}
+        onYearlyGoalUpdate={handleYearlyGoalUpdate}
+        isAdmin={isAdmin}
+        onDeleteMember={handleDeleteMember}
+        onCleanDummyData={handleCleanDummyData}
+        onClearAllData={handleClearAllData}
+        trackedUser={trackedUser}
+        onWorkStart={startWork}
+        onWorkBreak={startBreak}
+        onWorkFinish={finishWork}
+      />
+      
+      {/* ステータス選択モーダル */}
+      <StatusSelectionModal
+        isOpen={showStatusSelection}
+        onClose={() => setShowStatusSelection(false)}
+        onStatusSelect={handleStatusSelection}
+      />
+    </>
   );
 }
 
