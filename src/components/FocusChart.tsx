@@ -133,7 +133,9 @@ export const FocusChart: React.FC<FocusChartProps> = ({
               <p className="text-3xl font-bold text-white drop-shadow-lg">
                 {Math.round(averageScore)}%
               </p>
-              <p className="text-gray-300 text-sm mt-1">平均集中度</p>
+              <p className="text-gray-300 text-sm mt-1">
+                {period === 'daily' ? '日別平均集中度' : '月別平均集中度'}
+              </p>
             </div>
           </div>
           
@@ -141,9 +143,12 @@ export const FocusChart: React.FC<FocusChartProps> = ({
           {totalFocusHours > 0 && (
             <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 text-center">
               <p className="text-2xl font-bold text-white drop-shadow-lg">
-                {Math.round(totalFocusMinutes)}分
+                {period === 'daily' ? Math.round(totalFocusMinutes) : Math.round(totalFocusHours)}
+                {period === 'daily' ? '分' : '時間'}
               </p>
-              <p className="text-gray-300 text-xs">総作業時間</p>
+              <p className="text-gray-300 text-xs">
+                {period === 'daily' ? '日別総作業時間' : '月別総作業時間'}
+              </p>
             </div>
           )}
         </div>
