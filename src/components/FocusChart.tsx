@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FocusPoint } from '../types';
 import { Calendar, TrendingUp, BarChart3 } from 'lucide-react';
 
@@ -15,8 +15,13 @@ export const FocusChart: React.FC<FocusChartProps> = ({
   period = 'daily', 
   onPeriodChange 
 }) => {
-  console.log('FocusChart: 受け取ったデータ:', data);
-  console.log('FocusChart: 期間:', period);
+  // 内部で期間の状態を管理
+  const [internalPeriod, setInternalPeriod] = useState<ChartPeriod>(period);
+  
+  // 外部の期間が変更されたら内部の状態も更新
+  useEffect(() => {
+    setInternalPeriod(period);
+  }, [period]);
   
   // データの検証とフィルタリング
   const validData = data.filter(point => 
@@ -27,8 +32,6 @@ export const FocusChart: React.FC<FocusChartProps> = ({
     point.score >= 0 &&
     point.score <= 100
   );
-  
-  console.log('FocusChart: 有効なデータ:', validData);
 
   // 期間に応じてデータを処理
   const processDataByPeriod = (data: FocusPoint[], period: ChartPeriod): FocusPoint[] => {
@@ -38,9 +41,9 @@ export const FocusChart: React.FC<FocusChartProps> = ({
       const today = new Date();
       const dailyData = [];
       
-      for (let i = 6; i >= 0; i--) {
+      for (let i = 0; i <= 6; i++) {
         const date = new Date(today);
-        date.setDate(today.getDate() - i);
+        date.setDate(today.getDate() - (6 - i)); // 6日前から今日まで
         const month = date.getMonth() + 1;
         const day = date.getDate();
         const timeLabel = `${month}/${day}`;
@@ -51,19 +54,21 @@ export const FocusChart: React.FC<FocusChartProps> = ({
         
         dailyData.push({
           time: timeLabel,
-          score: sampleScores[6 - i],
-          focusHours: sampleHours[6 - i]
+          score: sampleScores[i], // iを使用して正しい順序で
+          focusHours: sampleHours[i]
         });
       }
       return dailyData;
-    } else {
-      // 月別データ：1月〜12月のデータを表示（1月形式）
+    } else if (period === 'monthly') {
+      // 月別データ：1月〜現在の月までのデータを表示（1月形式）
+      const today = new Date();
+      const currentMonth = today.getMonth() + 1; // 現在の月（1-12）
       const monthlyData = [];
       
-      for (let month = 1; month <= 12; month++) {
+      for (let month = 1; month <= currentMonth; month++) {
         const timeLabel = `${month}月`;
         
-        // サンプルデータ（1月〜12月）
+        // サンプルデータ（1月〜現在の月まで）
         const sampleScores = [82, 78, 75, 80, 73, 85, 79, 81, 76, 83, 77, 84];
         const sampleHours = [160, 145, 140, 150, 135, 155, 142, 148, 138, 152, 143, 147];
         
@@ -75,11 +80,13 @@ export const FocusChart: React.FC<FocusChartProps> = ({
       }
       return monthlyData;
     }
+    
+    // デフォルトは日別データ
+    return data;
   };
 
   // 期間に応じたデータを取得
-  const chartData = processDataByPeriod(validData, period);
-  console.log('FocusChart: 最終的なチャートデータ:', chartData);
+  const chartData = processDataByPeriod(validData, internalPeriod);
 
   const maxScore = Math.max(...chartData.map(d => d.score));
   const minScore = Math.min(...chartData.map(d => d.score));
@@ -125,9 +132,14 @@ export const FocusChart: React.FC<FocusChartProps> = ({
               return (
                 <button
                   key={p}
-                  onClick={() => onPeriodChange(p)}
+                  onClick={() => {
+                    setInternalPeriod(p);
+                    if (onPeriodChange) {
+                      onPeriodChange(p);
+                    }
+                  }}
                   className={`flex items-center gap-1 px-3 py-1 rounded-md text-sm font-medium transition-all ${
-                    period === p
+                    internalPeriod === p
                       ? 'bg-blue-500 text-white shadow-lg'
                       : 'text-gray-300 hover:text-white hover:bg-white/10'
                   }`}

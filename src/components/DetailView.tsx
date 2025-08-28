@@ -26,10 +26,6 @@ export const DetailView: React.FC<DetailViewProps> = ({
   isAdmin = false,
   onDeleteMember
 }) => {
-  console.log('DetailView: 受け取ったメンバー:', member);
-  console.log('DetailView: メンバーのfocusHistory:', member.focusHistory);
-  console.log('DetailView: 現在の期間:', currentPeriod);
-  
   if (!isOpen) return null;
 
   const [isEditingYearlyGoal, setIsEditingYearlyGoal] = React.useState(false);

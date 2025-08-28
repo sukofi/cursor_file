@@ -423,19 +423,15 @@ function App() {
 
   // 期間変更ハンドラー
   const handlePeriodChangeForDetail = (period: ChartPeriod) => {
-    console.log('App: 期間変更:', period);
-    console.log('App: 現在のselectedMember:', selectedMember);
-    
     // 選択中のメンバーのデータを更新
     if (selectedMember) {
       const updatedMember = { ...selectedMember };
-      console.log('App: 更新前のfocusHistory:', updatedMember.focusHistory);
       
       if (period === 'daily') {
         // 日別データ：過去7日間
         updatedMember.focusHistory = Array.from({ length: 7 }, (_, i) => {
           const date = new Date();
-          date.setDate(date.getDate() - (6 - i));
+          date.setDate(date.getDate() - (6 - i)); // 6日前から今日まで
           const month = date.getMonth() + 1;
           const day = date.getDate();
           return {
@@ -444,10 +440,11 @@ function App() {
             focusHours: Math.random() * 8
           };
         });
-        console.log('App: 日別データを生成:', updatedMember.focusHistory);
       } else if (period === 'monthly') {
-        // 月別データ：1月〜12月
-        updatedMember.focusHistory = Array.from({ length: 12 }, (_, i) => {
+        // 月別データ：1月〜現在の月まで
+        const today = new Date();
+        const currentMonth = today.getMonth() + 1; // 現在の月（1-12）
+        updatedMember.focusHistory = Array.from({ length: currentMonth }, (_, i) => {
           const month = i + 1;
           return {
             time: `${month}月`,
@@ -455,10 +452,8 @@ function App() {
             focusHours: Math.random() * 160
           };
         });
-        console.log('App: 月別データを生成:', updatedMember.focusHistory);
       }
       
-      console.log('App: 更新後のselectedMember:', updatedMember);
       setSelectedMember(updatedMember);
     }
   };

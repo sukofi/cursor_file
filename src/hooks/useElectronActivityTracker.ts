@@ -244,18 +244,14 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
 
   // 期間変更ハンドラー
   const handlePeriodChange = (period: ChartPeriod) => {
-    console.log('useElectronActivityTracker: 期間変更:', period);
     setCurrentPeriod(period);
     
     // 期間に応じたデータを生成して更新
     const newData = generatePeriodData(period);
-    console.log('useElectronActivityTracker: 生成されたデータ:', newData);
     
     if (period === 'daily') {
-      console.log('useElectronActivityTracker: 日別データを更新');
       setDailyHistory(newData);
     } else if (period === 'monthly') {
-      console.log('useElectronActivityTracker: 月別データを更新');
       setMonthlyHistory(newData);
     }
   };
@@ -267,22 +263,21 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
     switch (period) {
       case 'daily':
         return Array.from({ length: 7 }, (_, i) => {
-          const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+          const date = new Date(now);
+          date.setDate(now.getDate() - (6 - i)); // 6日前から今日まで
           const score = Math.max(0, Math.min(100, 75 + Math.random() * 20)); // 0-100の範囲に制限
           const focusHours = Math.random() * 8; // 0-8時間の集中時間
           return {
-            time: date.toLocaleDateString('ja-JP', { 
-              month: 'numeric',
-              day: 'numeric',
-              weekday: 'short'
-            }),
+            time: `${date.getMonth() + 1}/${date.getDate()}`,
             score: score,
             focusHours: focusHours
           };
-        }).reverse();
+        });
         
       case 'monthly':
-        return Array.from({ length: 12 }, (_, i) => {
+        const today = new Date();
+        const currentMonth = today.getMonth() + 1; // 現在の月（1-12）
+        return Array.from({ length: currentMonth }, (_, i) => {
           const month = i + 1;
           const score = Math.max(0, Math.min(100, 70 + Math.random() * 25)); // 0-100の範囲に制限
           const focusHours = Math.random() * 160; // 0-160時間の集中時間（月間）
@@ -720,11 +715,7 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
       const today = new Date();
       
       // 日別データの更新
-      const todayName = today.toLocaleDateString('ja-JP', { 
-        month: 'numeric',
-        day: 'numeric',
-        weekday: 'short'
-      });
+      const todayName = `${today.getMonth() + 1}/${today.getDate()}`;
       
       setDailyHistory(prev => {
         const newHistory = [...prev];
