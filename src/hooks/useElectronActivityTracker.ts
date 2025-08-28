@@ -244,7 +244,20 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
 
   // 期間変更ハンドラー
   const handlePeriodChange = (period: ChartPeriod) => {
+    console.log('useElectronActivityTracker: 期間変更:', period);
     setCurrentPeriod(period);
+    
+    // 期間に応じたデータを生成して更新
+    const newData = generatePeriodData(period);
+    console.log('useElectronActivityTracker: 生成されたデータ:', newData);
+    
+    if (period === 'daily') {
+      console.log('useElectronActivityTracker: 日別データを更新');
+      setDailyHistory(newData);
+    } else if (period === 'monthly') {
+      console.log('useElectronActivityTracker: 月別データを更新');
+      setMonthlyHistory(newData);
+    }
   };
 
   // 期間別データ生成関数
@@ -270,18 +283,15 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
         
       case 'monthly':
         return Array.from({ length: 12 }, (_, i) => {
-          const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+          const month = i + 1;
           const score = Math.max(0, Math.min(100, 70 + Math.random() * 25)); // 0-100の範囲に制限
           const focusHours = Math.random() * 160; // 0-160時間の集中時間（月間）
           return {
-            time: date.toLocaleDateString('ja-JP', { 
-              year: 'numeric',
-              month: 'short'
-            }),
+            time: `${month}月`,
             score: score,
             focusHours: focusHours
           };
-        }).reverse();
+        });
         
       default:
         return [];
@@ -733,10 +743,7 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
       });
 
       // 月別データの更新
-      const thisMonthName = today.toLocaleDateString('ja-JP', { 
-        year: 'numeric',
-        month: 'short'
-      });
+      const thisMonthName = `${today.getMonth() + 1}月`;
       
       setMonthlyHistory(prev => {
         const newHistory = [...prev];

@@ -104,8 +104,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
   };
 
   // 期間変更ハンドラー
-  const handlePeriodChange = (period: any) => {
+  const [currentPeriod, setCurrentPeriod] = useState<ChartPeriod>('daily');
+  
+  const handlePeriodChange = (period: ChartPeriod) => {
     console.log('Dashboard: 期間変更:', period);
+    setCurrentPeriod(period);
   };
 
   // 管理者権限チェック
@@ -352,8 +355,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
         onClose={() => setIsDetailViewOpen(false)}
         onGoalUpdate={onGoalUpdate}
         onYearlyGoalUpdate={onYearlyGoalUpdate}
-        currentPeriod="daily"
-        onPeriodChange={() => {}}
+        currentPeriod={currentPeriod}
+        onPeriodChange={handlePeriodChange}
         isAdmin={isAdmin}
         onDeleteMember={onDeleteMember}
       />

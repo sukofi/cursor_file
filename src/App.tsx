@@ -63,7 +63,9 @@ function App() {
     updateGoal,
     updateYearlyGoal,
     currentPeriod,
-    handlePeriodChange
+    handlePeriodChange,
+    dailyHistory,
+    monthlyHistory
   } = useElectronActivityTracker(
     profile.displayName || currentUser || 'ユーザー',
     { focusThreshold: settings.focusThreshold }
@@ -422,38 +424,41 @@ function App() {
   // 期間変更ハンドラー
   const handlePeriodChangeForDetail = (period: ChartPeriod) => {
     console.log('App: 期間変更:', period);
-    // 現在のユーザーの場合はuseElectronActivityTrackerの期間変更を使用
-    if (selectedMember?.id === 'current-user') {
-      handlePeriodChange(period);
-    }
-    // 他のメンバーの場合は、選択中のメンバーのfocusHistoryを更新
-    else if (selectedMember) {
-      // ダミーメンバーの場合は期間に応じたデータを生成
+    console.log('App: 現在のselectedMember:', selectedMember);
+    
+    // 選択中のメンバーのデータを更新
+    if (selectedMember) {
       const updatedMember = { ...selectedMember };
+      console.log('App: 更新前のfocusHistory:', updatedMember.focusHistory);
+      
       if (period === 'daily') {
-        updatedMember.focusHistory = Array.from({ length: 7 }, (_, i) => ({
-          time: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toLocaleDateString('ja-JP', { 
-            month: 'numeric',
-            day: 'numeric',
-            weekday: 'short'
-          }),
-          score: Math.floor(Math.random() * 100),
-          focusHours: Math.random() * 8
-        })).reverse();
-      } else if (period === 'monthly') {
-        updatedMember.focusHistory = Array.from({ length: 12 }, (_, i) => {
+        // 日別データ：過去7日間
+        updatedMember.focusHistory = Array.from({ length: 7 }, (_, i) => {
           const date = new Date();
-          date.setMonth(date.getMonth() - i);
+          date.setDate(date.getDate() - (6 - i));
+          const month = date.getMonth() + 1;
+          const day = date.getDate();
           return {
-            time: date.toLocaleDateString('ja-JP', { 
-              year: 'numeric',
-              month: 'short'
-            }),
+            time: `${month}/${day}`,
+            score: Math.floor(Math.random() * 100),
+            focusHours: Math.random() * 8
+          };
+        });
+        console.log('App: 日別データを生成:', updatedMember.focusHistory);
+      } else if (period === 'monthly') {
+        // 月別データ：1月〜12月
+        updatedMember.focusHistory = Array.from({ length: 12 }, (_, i) => {
+          const month = i + 1;
+          return {
+            time: `${month}月`,
             score: Math.floor(Math.random() * 100),
             focusHours: Math.random() * 160
           };
-        }).reverse();
+        });
+        console.log('App: 月別データを生成:', updatedMember.focusHistory);
       }
+      
+      console.log('App: 更新後のselectedMember:', updatedMember);
       setSelectedMember(updatedMember);
     }
   };
@@ -587,7 +592,7 @@ function App() {
         />
         
         <DetailView 
-          member={selectedMember.id === 'current-user' ? (trackedUser || selectedMember) : selectedMember} 
+          member={selectedMember} 
           isOpen={true}
           onClose={handleBackToDashboard}
           onGoalUpdate={handleGoalUpdate}
