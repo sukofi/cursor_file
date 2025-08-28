@@ -256,13 +256,15 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
         return Array.from({ length: 7 }, (_, i) => {
           const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
           const score = Math.max(0, Math.min(100, 75 + Math.random() * 20)); // 0-100の範囲に制限
+          const focusHours = Math.random() * 8; // 0-8時間の集中時間
           return {
             time: date.toLocaleDateString('ja-JP', { 
               month: 'numeric',
               day: 'numeric',
               weekday: 'short'
             }),
-            score: score
+            score: score,
+            focusHours: focusHours
           };
         }).reverse();
         
@@ -270,12 +272,14 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
         return Array.from({ length: 12 }, (_, i) => {
           const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
           const score = Math.max(0, Math.min(100, 70 + Math.random() * 25)); // 0-100の範囲に制限
+          const focusHours = Math.random() * 160; // 0-160時間の集中時間（月間）
           return {
             time: date.toLocaleDateString('ja-JP', { 
               year: 'numeric',
               month: 'short'
             }),
-            score: score
+            score: score,
+            focusHours: focusHours
           };
         }).reverse();
         

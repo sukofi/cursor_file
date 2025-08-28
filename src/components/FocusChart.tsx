@@ -145,18 +145,30 @@ export const FocusChart: React.FC<FocusChartProps> = ({
                   filter: `drop-shadow(0 0 8px ${getPointColor(point.score)})`,
                 }}
               />
-              {/* バーの上部に数値を表示 */}
+              {/* バーの上部に集中度と集中時間を表示 */}
               <text
                 x={`${barX + barWidth / 2}%`}
-                y={`${barY - 2}%`}
+                y={`${barY - 8}%`}
                 textAnchor="middle"
                 fill="white"
-                fontSize="10"
+                fontSize="9"
                 fontWeight="bold"
                 className="drop-shadow-lg"
               >
-                {Math.round(point.score)}
+                {Math.round(point.score)}%
               </text>
+              {point.focusHours !== undefined && (
+                <text
+                  x={`${barX + barWidth / 2}%`}
+                  y={`${barY - 2}%`}
+                  textAnchor="middle"
+                  fill="rgba(255,255,255,0.8)"
+                  fontSize="8"
+                  className="drop-shadow-lg"
+                >
+                  {point.focusHours.toFixed(1)}h
+                </text>
+              )}
             </g>
           );
         })}

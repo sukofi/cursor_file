@@ -137,7 +137,8 @@ function App() {
       activities: [],
       focusHistory: Array.from({ length: 7 }, () => ({
         time: new Date().toLocaleDateString('ja-JP'),
-        score: Math.floor(Math.random() * 100)
+        score: Math.floor(Math.random() * 100),
+        focusHours: Math.random() * 8
       })),
       todayGoal: `${['プロジェクト完了', 'コード整理', 'テスト作成', 'ドキュメント更新', 'バグ修正'][Math.floor(Math.random() * 5)]}`,
       yearlyGoal: `${['スキル向上', 'プロジェクト成功', 'チーム貢献', '技術習得', '成果創出'][Math.floor(Math.random() * 5)]}`,
@@ -436,7 +437,8 @@ function App() {
             day: 'numeric',
             weekday: 'short'
           }),
-          score: Math.floor(Math.random() * 100)
+          score: Math.floor(Math.random() * 100),
+          focusHours: Math.random() * 8
         })).reverse();
       } else if (period === 'monthly') {
         updatedMember.focusHistory = Array.from({ length: 12 }, (_, i) => {
@@ -447,7 +449,8 @@ function App() {
               year: 'numeric',
               month: 'short'
             }),
-            score: Math.floor(Math.random() * 100)
+            score: Math.floor(Math.random() * 100),
+            focusHours: Math.random() * 160
           };
         }).reverse();
       }

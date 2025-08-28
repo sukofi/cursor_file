@@ -32,6 +32,7 @@ export interface ActivityData {
 export interface FocusPoint {
   time: string;
   score: number;
+  focusHours?: number; // 集中時間（時間単位）
 }
 
 // データベース関連の型定義
