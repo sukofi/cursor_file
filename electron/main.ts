@@ -599,6 +599,16 @@ ipcMain.handle('db-update-user-yearly-goal', async (_, userId: string, yearlyGoa
   }
 });
 
+ipcMain.handle('db-get-user-goal', async (_, userId: string) => {
+  try {
+    const goal = databaseManager.getUserGoal(userId);
+    return { success: true, goal };
+  } catch (error) {
+    console.error('ユーザー目標取得エラー:', error);
+    return { success: false, error: error.message };
+  }
+});
+
 ipcMain.handle('db-get-user-stats', async (_, userId: string, date: string) => {
   try {
     return databaseManager.getUserStats(userId, date);

@@ -188,15 +188,45 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
   const [yearlyGoal, setYearlyGoal] = useState('新しい技術を習得し、プロジェクトを完成させる');
   
   // 目標更新関数
-  const updateGoal = (newGoal: string) => {
+  const updateGoal = async (newGoal: string) => {
     console.log('useElectronActivityTracker: 目標更新:', newGoal);
     setTodayGoal(newGoal);
+    
+    // データベースに保存
+    const userId = localStorage.getItem('userId');
+    if (userId && window.electronAPI?.dbUpdateUserGoal) {
+      try {
+        const result = await window.electronAPI.dbUpdateUserGoal(userId, newGoal);
+        if (result.success) {
+          console.log('目標をデータベースに保存しました');
+        } else {
+          console.error('目標の保存に失敗しました');
+        }
+      } catch (error) {
+        console.error('目標保存エラー:', error);
+      }
+    }
   };
 
   // 今年の目標更新関数
-  const updateYearlyGoal = (newYearlyGoal: string) => {
+  const updateYearlyGoal = async (newYearlyGoal: string) => {
     console.log('useElectronActivityTracker: 今年の目標更新:', newYearlyGoal);
     setYearlyGoal(newYearlyGoal);
+    
+    // データベースに保存
+    const userId = localStorage.getItem('userId');
+    if (userId && window.electronAPI?.dbUpdateUserYearlyGoal) {
+      try {
+        const result = await window.electronAPI.dbUpdateUserYearlyGoal(userId, newYearlyGoal);
+        if (result.success) {
+          console.log('年間目標をデータベースに保存しました');
+        } else {
+          console.error('年間目標の保存に失敗しました');
+        }
+      } catch (error) {
+        console.error('年間目標保存エラー:', error);
+      }
+    }
   };
 
   // 期間変更ハンドラー
@@ -870,6 +900,24 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
     
     // 初期の集中度履歴を日別データに設定
     setFocusHistory(generatePeriodData('daily'));
+    
+    // 目標を取得
+    const loadUserGoals = async () => {
+      const userId = localStorage.getItem('userId');
+      if (userId && window.electronAPI?.dbGetUserGoal) {
+        try {
+          const result = await window.electronAPI.dbGetUserGoal(userId);
+          if (result.success && result.goal) {
+            setTodayGoal(result.goal.todayGoal || '');
+            setYearlyGoal(result.goal.yearlyGoal || '');
+          }
+        } catch (error) {
+          console.error('目標取得エラー:', error);
+        }
+      }
+    };
+    
+    loadUserGoals();
   }, []);
 
   // TeamMemberオブジェクトの生成
