@@ -4,6 +4,7 @@ import { Dashboard } from './components/Dashboard';
 import { DetailView } from './components/DetailView';
 import { StatusSelectionModal } from './components/StatusSelectionModal';
 import { TeamMember } from './types';
+import { ChartPeriod } from './components/FocusChart';
 import { useElectronActivityTracker } from './hooks/useElectronActivityTracker';
 
 
@@ -417,6 +418,43 @@ function App() {
     }
   };
 
+  // 期間変更ハンドラー
+  const handlePeriodChangeForDetail = (period: ChartPeriod) => {
+    console.log('App: 期間変更:', period);
+    // 現在のユーザーの場合はuseElectronActivityTrackerの期間変更を使用
+    if (selectedMember?.id === 'current-user') {
+      handlePeriodChange(period);
+    }
+    // 他のメンバーの場合は、選択中のメンバーのfocusHistoryを更新
+    else if (selectedMember) {
+      // ダミーメンバーの場合は期間に応じたデータを生成
+      const updatedMember = { ...selectedMember };
+      if (period === 'daily') {
+        updatedMember.focusHistory = Array.from({ length: 7 }, (_, i) => ({
+          time: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toLocaleDateString('ja-JP', { 
+            month: 'numeric',
+            day: 'numeric',
+            weekday: 'short'
+          }),
+          score: Math.floor(Math.random() * 100)
+        })).reverse();
+      } else if (period === 'monthly') {
+        updatedMember.focusHistory = Array.from({ length: 12 }, (_, i) => {
+          const date = new Date();
+          date.setMonth(date.getMonth() - i);
+          return {
+            time: date.toLocaleDateString('ja-JP', { 
+              year: 'numeric',
+              month: 'short'
+            }),
+            score: Math.floor(Math.random() * 100)
+          };
+        }).reverse();
+      }
+      setSelectedMember(updatedMember);
+    }
+  };
+
   const handleLogout = () => {
     setIsLoggedIn(false);
     setCurrentUser(null);
@@ -557,7 +595,7 @@ function App() {
             onGoalUpdate={handleGoalUpdate}
             onYearlyGoalUpdate={handleYearlyGoalUpdate}
             currentPeriod={currentPeriod}
-            onPeriodChange={handlePeriodChange}
+            onPeriodChange={handlePeriodChangeForDetail}
             isAdmin={isAdmin}
             onDeleteMember={handleDeleteMember}
           />

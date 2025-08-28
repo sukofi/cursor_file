@@ -197,7 +197,7 @@ export const DetailView: React.FC<DetailViewProps> = ({
             <FocusChart 
               data={member.focusHistory} 
               period={currentPeriod}
-              onPeriodChange={member.id === 'current-user' ? onPeriodChange : undefined}
+              onPeriodChange={onPeriodChange}
             />
           </div>
 
