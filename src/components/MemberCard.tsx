@@ -108,7 +108,9 @@ export const MemberCard: React.FC<MemberCardProps> = ({
 
   return (
     <div 
-      className="backdrop-blur-lg bg-white/10 rounded-xl border p-6 cursor-pointer hover:bg-white/15 transition-all duration-300 relative group"
+      className={`backdrop-blur-lg bg-white/10 rounded-xl border p-6 cursor-pointer hover:bg-white/15 transition-all duration-300 relative group ${
+        neonStyle.isFinished ? 'min-h-[280px]' : ''
+      }`}
       onClick={onClick}
       style={{
         borderColor: neonStyle.borderColor,
@@ -134,9 +136,9 @@ export const MemberCard: React.FC<MemberCardProps> = ({
       
       {/* 作業終了時の完了オーバーレイ */}
       {neonStyle.isFinished && (
-        <div className="absolute inset-0 bg-red-500/10 backdrop-blur-sm rounded-xl flex items-center justify-center pointer-events-none">
-          <div className="bg-red-500/80 backdrop-blur-sm rounded-full p-4">
-            <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+        <div className="absolute inset-0 bg-red-500/5 backdrop-blur-sm rounded-xl flex items-center justify-center pointer-events-none">
+          <div className="bg-red-500/90 backdrop-blur-sm rounded-full p-3 shadow-lg">
+            <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
           </div>
@@ -181,46 +183,53 @@ export const MemberCard: React.FC<MemberCardProps> = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-4">
-                  <div className="text-center relative">
-            {/* 円グラフ */}
-            <div className="relative w-16 h-16 mx-auto mb-2 transition-all duration-500">
-              <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
-                {/* 背景円 */}
-                <circle
-                  cx="18"
-                  cy="18"
-                  r="16"
-                  fill="none"
-                  stroke="rgba(255, 255, 255, 0.1)"
-                  strokeWidth="2"
-                />
-                {/* 進捗円 */}
-                <circle
-                  cx="18"
-                  cy="18"
-                  r="16"
-                  fill="none"
-                  stroke={neonStyle.borderColor}
-                  strokeWidth="2"
-                  strokeDasharray={`${(animatedScore / 100) * 100.53} 100.53`}
-                  strokeLinecap="round"
-                  style={{
-                    filter: `drop-shadow(0 0 8px ${neonStyle.borderColor})`,
-                    transition: 'stroke-dasharray 0.8s ease-in-out',
-                  }}
-                />
-              </svg>
-              {/* 中央の数値 */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <p className={`text-lg font-bold ${neonStyle.textColor} transition-all duration-800`}>
-                  {animatedScore}
-                </p>
-              </div>
-
+            <div className="grid grid-cols-2 gap-4 mb-4">
+        <div className="text-center relative">
+          {/* 円グラフ */}
+          <div className="relative w-16 h-16 mx-auto mb-2 transition-all duration-500">
+            <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
+              {/* 背景円 */}
+              <circle
+                cx="18"
+                cy="18"
+                r="16"
+                fill="none"
+                stroke="rgba(255, 255, 255, 0.1)"
+                strokeWidth="2"
+              />
+              {/* 進捗円 */}
+              <circle
+                cx="18"
+                cy="18"
+                r="16"
+                fill="none"
+                stroke={neonStyle.borderColor}
+                strokeWidth="2"
+                strokeDasharray={`${(neonStyle.isFinished ? 
+                  Math.round(member.focusHistory.reduce((sum, item) => sum + item.score, 0) / Math.max(member.focusHistory.length, 1)) : 
+                  animatedScore) / 100 * 100.53} 100.53`}
+                strokeLinecap="round"
+                style={{
+                  filter: `drop-shadow(0 0 8px ${neonStyle.borderColor})`,
+                  transition: 'stroke-dasharray 0.8s ease-in-out',
+                }}
+              />
+            </svg>
+            {/* 中央の数値 */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <p className={`text-lg font-bold ${neonStyle.textColor} transition-all duration-800`}>
+                {neonStyle.isFinished ? 
+                  Math.round(member.focusHistory.reduce((sum, item) => sum + item.score, 0) / Math.max(member.focusHistory.length, 1)) : 
+                  animatedScore
+                }
+              </p>
             </div>
-            <p className="text-gray-400 text-xs">集中度</p>
+ 
           </div>
+          <p className="text-gray-400 text-xs">
+            {neonStyle.isFinished ? '平均集中度' : '集中度'}
+          </p>
+        </div>
         <div className="text-center relative">
           <p className="text-2xl font-bold text-white">{Math.round(member.dailyStats.totalHours * 60)}分</p>
           <p className="text-gray-400 text-xs">
@@ -229,23 +238,27 @@ export const MemberCard: React.FC<MemberCardProps> = ({
         </div>
       </div>
 
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <span className="text-gray-300 text-sm">今日の目標</span>
-          <span className={`text-xs px-2 py-1 rounded-full ${
-            member.workStatus === 'working' ? 'bg-green-500/20 text-green-400' :
-            member.workStatus === 'break' ? 'bg-yellow-500/20 text-yellow-400' :
-            member.workStatus === 'finished' ? 'bg-red-500/20 text-red-400' :
-            'bg-gray-500/20 text-gray-400'
-          }`}>
-            {member.workStatus === 'working' ? '作業中' :
-             member.workStatus === 'break' ? '休憩中' :
-             member.workStatus === 'finished' ? '終了' :
-             '未開始'}
-          </span>
+      {/* 作業終了時以外は今日の目標を表示 */}
+      {!neonStyle.isFinished && (
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-gray-300 text-sm">今日の目標</span>
+            <span className={`text-xs px-2 py-1 rounded-full ${
+              member.workStatus === 'working' ? 'bg-green-500/20 text-green-400' :
+              member.workStatus === 'break' ? 'bg-yellow-500/20 text-yellow-400' :
+              member.workStatus === 'finished' ? 'bg-red-500/20 text-red-400' :
+              'bg-gray-500/20 text-gray-400'
+            }`}>
+              {member.workStatus === 'working' ? '作業中' :
+               member.workStatus === 'break' ? '休憩中' :
+               member.workStatus === 'finished' ? '終了' :
+               '未開始'}
+            </span>
+          </div>
+          <p className="text-white text-sm line-clamp-2">{member.todayGoal || '目標が設定されていません'}</p>
         </div>
-        <p className="text-white text-sm line-clamp-2">{member.todayGoal || '目標が設定されていません'}</p>
-      </div>
+      )}
+
     </div>
   );
 };
