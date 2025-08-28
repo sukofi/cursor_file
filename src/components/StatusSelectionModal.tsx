@@ -1,5 +1,5 @@
-import React from 'react';
-import { Play, Coffee, CheckCircle, X } from 'lucide-react';
+import React, { useState } from 'react';
+import { Play, Coffee, CheckCircle, X, Loader2 } from 'lucide-react';
 
 interface StatusSelectionModalProps {
   isOpen: boolean;
@@ -12,7 +12,18 @@ export const StatusSelectionModal: React.FC<StatusSelectionModalProps> = ({
   onClose,
   onStatusSelect
 }) => {
+  const [loadingStatus, setLoadingStatus] = useState<string | null>(null);
+  
   if (!isOpen) return null;
+  
+  const handleStatusSelect = async (status: 'working' | 'break' | 'finished') => {
+    setLoadingStatus(status);
+    try {
+      await onStatusSelect(status);
+    } finally {
+      setLoadingStatus(null);
+    }
+  };
 
   const statusOptions = [
     {
@@ -66,15 +77,27 @@ export const StatusSelectionModal: React.FC<StatusSelectionModalProps> = ({
         <div className="space-y-3">
           {statusOptions.map((option) => {
             const IconComponent = option.icon;
+            const isLoading = loadingStatus === option.id;
+            const isDisabled = loadingStatus !== null;
+            
             return (
               <button
                 key={option.id}
-                onClick={() => onStatusSelect(option.id as 'working' | 'break' | 'finished')}
-                className={`w-full p-4 rounded-lg flex items-center space-x-4 transition-all duration-200 ${option.color} ${option.textColor} hover:scale-105 hover:shadow-lg`}
+                onClick={() => handleStatusSelect(option.id as 'working' | 'break' | 'finished')}
+                disabled={isDisabled}
+                className={`w-full p-4 rounded-lg flex items-center space-x-4 transition-all duration-200 ${option.color} ${option.textColor} hover:scale-105 hover:shadow-lg ${
+                  isDisabled ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
               >
-                <IconComponent size={24} />
+                {isLoading ? (
+                  <Loader2 size={24} className="animate-spin" />
+                ) : (
+                  <IconComponent size={24} />
+                )}
                 <div className="text-left">
-                  <div className="font-semibold">{option.title}</div>
+                  <div className="font-semibold">
+                    {isLoading ? '処理中...' : option.title}
+                  </div>
                   <div className="text-sm opacity-90">{option.description}</div>
                 </div>
               </button>

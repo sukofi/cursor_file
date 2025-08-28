@@ -348,19 +348,19 @@ function App() {
   };
 
   // ステータス選択ハンドラー
-  const handleStatusSelect = (status: 'working' | 'break' | 'finished') => {
+  const handleStatusSelect = async (status: 'working' | 'break' | 'finished') => {
     console.log('App: ステータス選択:', status);
     
     // ステータスに応じて適切な関数を呼び出し
     switch (status) {
       case 'working':
-        startWork();
+        await startWork();
         break;
       case 'break':
-        startBreak();
+        await startBreak();
         break;
       case 'finished':
-        finishWork();
+        await finishWork();
         break;
     }
     
