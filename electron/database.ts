@@ -323,21 +323,49 @@ class DatabaseManager {
   }
 
   public updateUserGoal(userId: string, goal: string): boolean {
-    const stmt = this.db.prepare(`
-      INSERT OR REPLACE INTO goals (userId, todayGoal, updatedAt)
-      VALUES (?, ?, ?)
-    `);
-    const result = stmt.run(userId, goal, new Date().toISOString());
-    return result.changes > 0;
+    try {
+      const goalId = `goal-${userId}-${Date.now()}`;
+      const stmt = this.db.prepare(`
+        INSERT OR REPLACE INTO goals (id, userId, todayGoal, updatedAt)
+        VALUES (?, ?, ?, ?)
+      `);
+      const result = stmt.run(goalId, userId, goal, new Date().toISOString());
+      return result.changes > 0;
+    } catch (error) {
+      console.error('ユーザー目標更新エラー:', error);
+      return false;
+    }
   }
 
   public updateUserYearlyGoal(userId: string, yearlyGoal: string): boolean {
-    const stmt = this.db.prepare(`
-      INSERT OR REPLACE INTO goals (userId, yearlyGoal, updatedAt)
-      VALUES (?, ?, ?)
-    `);
-    const result = stmt.run(userId, yearlyGoal, new Date().toISOString());
-    return result.changes > 0;
+    try {
+      const goalId = `yearly-goal-${userId}-${Date.now()}`;
+      const stmt = this.db.prepare(`
+        INSERT OR REPLACE INTO goals (id, userId, yearlyGoal, updatedAt)
+        VALUES (?, ?, ?, ?)
+      `);
+      const result = stmt.run(goalId, userId, yearlyGoal, new Date().toISOString());
+      return result.changes > 0;
+    } catch (error) {
+      console.error('ユーザー年間目標更新エラー:', error);
+      return false;
+    }
+  }
+
+  public getUserGoal(userId: string): { todayGoal?: string; yearlyGoal?: string } | null {
+    try {
+      const stmt = this.db.prepare(`
+        SELECT todayGoal, yearlyGoal FROM goals 
+        WHERE userId = ? 
+        ORDER BY updatedAt DESC 
+        LIMIT 1
+      `);
+      const result = stmt.get(userId) as any;
+      return result || null;
+    } catch (error) {
+      console.error('ユーザー目標取得エラー:', error);
+      return null;
+    }
   }
 
   public getUserStats(userId: string, date: string): DatabaseStats | null {

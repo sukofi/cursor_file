@@ -651,8 +651,8 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
       setMetrics(prev => {
         const newMetrics = {
           ...prev,
-          activeTime: prev.activeTime + (isIdle ? 0 : 0.0167), // 1分 = 60秒なので、1秒 = 0.0167分
-          idleTime: prev.idleTime + (isIdle ? 0.0167 : 0) // 1分 = 60秒なので、1秒 = 0.0167分
+          activeTime: prev.activeTime + (isIdle ? 0 : 1/60), // 1秒 = 1/60分
+          idleTime: prev.idleTime + (isIdle ? 1/60 : 0) // 1秒 = 1/60分
         };
 
         // アプリ使用時間の更新（作業中の場合のみ）
@@ -660,7 +660,7 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
           setAppUsageMap(currentMap => {
             const newMap = new Map(currentMap);
             const currentTime = newMap.get(prev.currentApp) || 0;
-            newMap.set(prev.currentApp, currentTime + 0.0167); // 1分 = 60秒なので、1秒 = 0.0167分
+            newMap.set(prev.currentApp, currentTime + 1/60); // 1秒 = 1/60分
             return newMap;
           });
         }
@@ -834,9 +834,9 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
     checkAndResetDailyStats();
     
     // 時間を分単位で計算（activeTimeとidleTimeは既に分単位）
-    const totalMinutes = Math.round((metrics.activeTime + metrics.idleTime) * 60);
-    const focusMinutes = Math.round(metrics.activeTime * 60);
-    const breakMinutes = Math.round(metrics.idleTime * 60);
+    const totalMinutes = Math.round(metrics.activeTime + metrics.idleTime);
+    const focusMinutes = Math.round(metrics.activeTime);
+    const breakMinutes = Math.round(metrics.idleTime);
 
     // 作業状態に応じてアプリ名を調整
     let currentActivity = metrics.currentApp;
@@ -875,7 +875,7 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
       avatar: getAvatarFromProfile(),
       lastUpdate: new Date(),
       dailyStats: {
-        totalHours: Math.max(totalMinutes / 60, 0.1), // 分を時間に変換
+        totalHours: Math.max(totalMinutes / 60, 0), // 分を時間に変換
         focusHours: Math.max(focusMinutes / 60, 0), // 分を時間に変換
         breakHours: Math.max(breakMinutes / 60, 0) // 分を時間に変換
       },
