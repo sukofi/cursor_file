@@ -535,6 +535,8 @@ function App() {
             onYearlyGoalUpdate={handleYearlyGoalUpdate}
             currentPeriod={currentPeriod}
             onPeriodChange={handlePeriodChange}
+            isAdmin={isAdmin}
+            onDeleteMember={handleDeleteMember}
           />
         </div>
       </div>

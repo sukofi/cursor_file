@@ -64,6 +64,15 @@ export const DetailView: React.FC<DetailViewProps> = ({
     }
   };
 
+  // デバッグ用：削除ボタンの表示条件をログ出力
+  console.log('DetailView: 削除ボタン表示条件:', {
+    isAdmin,
+    memberId: member.id,
+    currentUserId: localStorage.getItem('userId'),
+    hasOnDeleteMember: !!onDeleteMember,
+    shouldShow: isAdmin && member.id !== 'current-user' && member.id !== localStorage.getItem('userId') && !!onDeleteMember
+  });
+
   return (
     <div className={`${isOpen ? 'block' : 'hidden'} ${member.id === 'current-user' ? 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4' : 'w-full'}`}>
       <div className={`bg-gray-800 rounded-xl border border-white/20 ${member.id === 'current-user' ? 'max-w-2xl w-full max-h-[90vh] overflow-y-auto' : 'w-full'}`}>
@@ -237,7 +246,7 @@ export const DetailView: React.FC<DetailViewProps> = ({
           </div>
 
           {/* 管理者のみ表示される削除ボタン */}
-          {isAdmin && member.id !== 'current-user' && onDeleteMember && (
+          {isAdmin && member.id !== 'current-user' && member.id !== localStorage.getItem('userId') && onDeleteMember && (
             <div className="pt-6 border-t border-gray-600/30">
               <button
                 onClick={handleDeleteClick}
