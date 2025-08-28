@@ -92,6 +92,60 @@ function App() {
     return false;
   };
 
+  // ダミーメンバーを生成する関数
+  const generateDummyMembers = (): TeamMember[] => {
+    const dummyNames = [
+      '田中太郎',
+      '佐藤花子',
+      '鈴木一郎',
+      '高橋美咲',
+      '伊藤健太',
+      '渡辺恵子',
+      '山田次郎',
+      '中村真理',
+      '小林正男',
+      '加藤由美'
+    ];
+
+    const workStatuses: ('working' | 'break' | 'finished')[] = ['working', 'break', 'finished'];
+    const activities = [
+      'コードレビュー中',
+      'デザイン作業中',
+      '会議参加中',
+      'ドキュメント作成中',
+      'テスト実行中',
+      '休憩中',
+      '作業終了'
+    ];
+
+    return dummyNames.slice(0, 5).map((name, index) => ({
+      id: `dummy-${index + 1}`,
+      name: name,
+      focusScore: Math.floor(Math.random() * 100),
+      currentActivity: activities[Math.floor(Math.random() * activities.length)],
+      status: 'online' as const,
+      avatar: `/avatars/dummy-${index + 1}.jpg`,
+      lastUpdate: new Date(),
+      dailyStats: {
+        totalHours: Math.random() * 8,
+        focusHours: Math.random() * 6,
+        breakHours: Math.random() * 2
+      },
+      activities: [],
+      focusHistory: Array.from({ length: 7 }, () => ({
+        time: new Date().toLocaleDateString('ja-JP'),
+        score: Math.floor(Math.random() * 100)
+      })),
+      todayGoal: `今日の目標: ${['プロジェクト完了', 'コード整理', 'テスト作成', 'ドキュメント更新', 'バグ修正'][Math.floor(Math.random() * 5)]}`,
+      yearlyGoal: `年間目標: ${['スキル向上', 'プロジェクト成功', 'チーム貢献', '技術習得', '成果創出'][Math.floor(Math.random() * 5)]}`,
+      isWorking: Math.random() > 0.3,
+      workStatus: workStatuses[Math.floor(Math.random() * workStatuses.length)],
+      isAdmin: false,
+      email: `${name.toLowerCase().replace(/\s+/g, '')}@example.com`,
+      createdAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000) // 過去30日以内
+    }));
+  };
+
   // チームメンバーを読み込む関数
   const loadTeamMembers = async () => {
     if (!window.electronAPI?.dbGetAllUsers) {
@@ -133,23 +187,32 @@ function App() {
       
       console.log('App: 現在のユーザーを除外したチームメンバー:', otherMembers);
       
+      // ダミーメンバーを生成
+      const dummyMembers = generateDummyMembers();
+      console.log('App: 生成されたダミーメンバー:', dummyMembers);
+      
       // trackedUserが利用可能な場合のみ追加
       if (trackedUser) {
-        setTeamMembers([trackedUser, ...otherMembers]);
+        setTeamMembers([trackedUser, ...otherMembers, ...dummyMembers]);
       } else {
-        setTeamMembers(otherMembers);
+        setTeamMembers([...otherMembers, ...dummyMembers]);
       }
       
-      // データベースにユーザーが存在しない場合は、現在のユーザーだけを設定
+      // データベースにユーザーが存在しない場合は、現在のユーザーとダミーメンバーを設定
       if (users.length === 0 && trackedUser) {
-        console.log('App: データベースにユーザーが存在しないため、現在のユーザーのみを設定');
-        setTeamMembers([trackedUser]);
+        console.log('App: データベースにユーザーが存在しないため、現在のユーザーとダミーメンバーを設定');
+        setTeamMembers([trackedUser, ...dummyMembers]);
       }
       
     } catch (error) {
       console.error('App: チームメンバーの読み込みエラー:', error);
-      // エラー時は空の配列を設定
-      setTeamMembers([]);
+      // エラー時はダミーメンバーを設定
+      const dummyMembers = generateDummyMembers();
+      if (trackedUser) {
+        setTeamMembers([trackedUser, ...dummyMembers]);
+      } else {
+        setTeamMembers(dummyMembers);
+      }
     }
   };
 
