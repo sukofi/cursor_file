@@ -238,26 +238,24 @@ export const MemberCard: React.FC<MemberCardProps> = ({
         </div>
       </div>
 
-      {/* 作業終了時以外は今日の目標を表示 */}
-      {!neonStyle.isFinished && (
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-gray-300 text-sm">今日の目標</span>
-            <span className={`text-xs px-2 py-1 rounded-full ${
-              member.workStatus === 'working' ? 'bg-green-500/20 text-green-400' :
-              member.workStatus === 'break' ? 'bg-yellow-500/20 text-yellow-400' :
-              member.workStatus === 'finished' ? 'bg-red-500/20 text-red-400' :
-              'bg-gray-500/20 text-gray-400'
-            }`}>
-              {member.workStatus === 'working' ? '作業中' :
-               member.workStatus === 'break' ? '休憩中' :
-               member.workStatus === 'finished' ? '終了' :
-               '未開始'}
-            </span>
-          </div>
-          <p className="text-white text-sm line-clamp-2">{member.todayGoal || '目標が設定されていません'}</p>
+      {/* 今日の目標を表示 */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <span className="text-gray-300 text-sm">今日の目標</span>
+          <span className={`text-xs px-2 py-1 rounded-full ${
+            member.workStatus === 'working' ? 'bg-green-500/20 text-green-400' :
+            member.workStatus === 'break' ? 'bg-yellow-500/20 text-yellow-400' :
+            member.workStatus === 'finished' ? 'bg-red-500/20 text-red-400' :
+            'bg-gray-500/20 text-gray-400'
+          }`}>
+            {member.workStatus === 'working' ? '作業中' :
+             member.workStatus === 'break' ? '休憩中' :
+             member.workStatus === 'finished' ? '終了' :
+             '未開始'}
+          </span>
         </div>
-      )}
+        <p className="text-white text-sm line-clamp-2">{member.todayGoal || '目標が設定されていません'}</p>
+      </div>
 
     </div>
   );
