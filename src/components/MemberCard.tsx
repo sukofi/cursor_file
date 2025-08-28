@@ -118,8 +118,8 @@ export const MemberCard: React.FC<MemberCardProps> = ({
       {/* 休憩中の一時停止オーバーレイ */}
       {neonStyle.isPaused && (
         <div className="absolute inset-0 bg-yellow-500/10 backdrop-blur-sm rounded-xl flex items-center justify-center pointer-events-none">
-          <div className="bg-yellow-500/80 backdrop-blur-sm rounded-full p-3">
-            <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+          <div className="bg-yellow-500/80 backdrop-blur-sm rounded-full p-4">
+            <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
             </svg>
           </div>
@@ -200,36 +200,13 @@ export const MemberCard: React.FC<MemberCardProps> = ({
                   {animatedScore}
                 </p>
               </div>
-              {/* 休憩中の一時停止アイコン */}
-              {neonStyle.isPaused && (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="bg-yellow-500/80 backdrop-blur-sm rounded-full p-1">
-                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                </div>
-              )}
+
             </div>
-            <p className="text-gray-400 text-xs">
-              {neonStyle.isPaused ? '集中度（一時停止）' : '集中度'}
-            </p>
+            <p className="text-gray-400 text-xs">集中度</p>
           </div>
         <div className="text-center relative">
           <p className="text-2xl font-bold text-white">{Math.round(member.dailyStats.totalHours * 60)}分</p>
-          <p className="text-gray-400 text-xs">
-            {neonStyle.isPaused ? '作業時間（一時停止）' : '作業時間'}
-          </p>
-          {/* 休憩中の一時停止インジケーター */}
-          {neonStyle.isPaused && (
-            <div className="absolute -top-1 -right-1">
-              <div className="bg-yellow-500 rounded-full p-1 animate-pulse">
-                <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-                </svg>
-              </div>
-            </div>
-          )}
+          <p className="text-gray-400 text-xs">作業時間</p>
         </div>
       </div>
 
