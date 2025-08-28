@@ -310,14 +310,18 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
     }
     
     const now = Date.now();
-    workStartTimeRef.current = now; // 作業開始時間を記録
     
-    // 作業開始時に時間をリセット
-    setMetrics(prev => ({
-      ...prev,
-      activeTime: 0,
-      idleTime: 0
-    }));
+    // 初回の作業開始時のみworkStartTimeRefを設定
+    if (!workStartTimeRef.current) {
+      workStartTimeRef.current = now; // 作業開始時間を記録
+    }
+    
+    // 作業開始時に時間をリセットしない（累積時間を保持）
+    // setMetrics(prev => ({
+    //   ...prev,
+    //   activeTime: 0,
+    //   idleTime: 0
+    // }));
     
     setMetrics(prev => {
       console.log('useElectronActivityTracker: 作業開始 - 前の状態:', prev.workStatus);
@@ -349,14 +353,15 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
       console.error('useElectronActivityTracker: データベース記録エラー:', error);
     }
     
-    workStartTimeRef.current = null; // 作業開始時間をリセット
+    // 作業開始時間は保持（リセットしない）
+    // workStartTimeRef.current = null; // この行を削除
     
     setMetrics(prev => {
       console.log('useElectronActivityTracker: 休憩開始 - 前の状態:', prev.workStatus);
       const newMetrics = {
         ...prev,
         isWorking: false,
-        workStartTime: null,
+        workStartTime: null, // これはUI表示用なのでnullに設定
         workStatus: 'break' as const,
         currentApp: '休憩中',
         currentWindowTitle: '休憩中'
@@ -381,7 +386,8 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
       console.error('useElectronActivityTracker: データベース記録エラー:', error);
     }
     
-    workStartTimeRef.current = null; // 作業開始時間をリセット
+    // 作業終了時のみ作業開始時間をリセット
+    workStartTimeRef.current = null;
     
     setMetrics(prev => {
       console.log('useElectronActivityTracker: 作業終了 - 前の状態:', prev.workStatus);
@@ -424,6 +430,11 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
       
       // マウス移動の検出
       const handleMouseMove = (e: MouseEvent) => {
+        // 作業中でない場合はアクティビティを記録しない
+        if (metrics.workStatus !== 'working') {
+          return;
+        }
+        
         const deltaX = Math.abs(e.clientX - mousePositionRef.current.x);
         const deltaY = Math.abs(e.clientY - mousePositionRef.current.y);
         
@@ -441,6 +452,11 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
 
       // マウスクリックの検出
       const handleMouseClick = () => {
+        // 作業中でない場合はアクティビティを記録しない
+        if (metrics.workStatus !== 'working') {
+          return;
+        }
+        
         lastActivityTime.current = now;
         console.log('useElectronActivityTracker: マウスクリック検出');
         setMetrics(prev => ({
@@ -451,6 +467,11 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
 
       // キーストロークの検出
       const handleKeyPress = () => {
+        // 作業中でない場合はアクティビティを記録しない
+        if (metrics.workStatus !== 'working') {
+          return;
+        }
+        
         lastActivityTime.current = now;
         console.log('useElectronActivityTracker: キーストローク検出');
         setMetrics(prev => ({
@@ -659,7 +680,12 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
       }
       
       // 作業状態に応じた処理
-      if (metrics.workStatus === 'break' || metrics.workStatus === 'finished') {
+      if (metrics.workStatus === 'break') {
+        // 休憩中は集中度を0に設定し、時間計測を停止
+        setCurrentFocusScore(0);
+        return;
+      } else if (metrics.workStatus === 'finished') {
+        // 作業終了時は集中度を0に設定し、時間計測を停止
         setCurrentFocusScore(0);
         return;
       } else if (metrics.workStatus === 'working') {
@@ -854,7 +880,7 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
     
     // 作業開始時間からの実際の経過時間を計算
     let actualWorkTime = 0;
-    if (workStartTimeRef.current && metrics.workStatus === 'working') {
+    if (workStartTimeRef.current) {
       const now = Date.now();
       actualWorkTime = (now - workStartTimeRef.current) / (1000 * 60); // 分単位
     }
