@@ -136,8 +136,8 @@ function App() {
         time: new Date().toLocaleDateString('ja-JP'),
         score: Math.floor(Math.random() * 100)
       })),
-      todayGoal: `今日の目標: ${['プロジェクト完了', 'コード整理', 'テスト作成', 'ドキュメント更新', 'バグ修正'][Math.floor(Math.random() * 5)]}`,
-      yearlyGoal: `年間目標: ${['スキル向上', 'プロジェクト成功', 'チーム貢献', '技術習得', '成果創出'][Math.floor(Math.random() * 5)]}`,
+      todayGoal: `${['プロジェクト完了', 'コード整理', 'テスト作成', 'ドキュメント更新', 'バグ修正'][Math.floor(Math.random() * 5)]}`,
+      yearlyGoal: `${['スキル向上', 'プロジェクト成功', 'チーム貢献', '技術習得', '成果創出'][Math.floor(Math.random() * 5)]}`,
       isWorking: Math.random() > 0.3,
       workStatus: workStatuses[Math.floor(Math.random() * workStatuses.length)],
       isAdmin: false,
