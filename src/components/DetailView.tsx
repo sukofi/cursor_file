@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, User, Target, Clock, TrendingUp, Activity, Trash2 } from 'lucide-react';
+import { X, User, Clock, TrendingUp, Activity, Trash2 } from 'lucide-react';
 import { TeamMember } from '../types';
 import { FocusChart, ChartPeriod } from './FocusChart';
 
@@ -28,22 +28,8 @@ export const DetailView: React.FC<DetailViewProps> = ({
 }) => {
   if (!isOpen) return null;
 
-  const [isEditingGoal, setIsEditingGoal] = React.useState(false);
-  const [newGoal, setNewGoal] = React.useState(member.todayGoal || '');
   const [isEditingYearlyGoal, setIsEditingYearlyGoal] = React.useState(false);
   const [newYearlyGoal, setNewYearlyGoal] = React.useState(member.yearlyGoal || '');
-
-  const handleGoalSave = () => {
-    if (onGoalUpdate) {
-      onGoalUpdate(member.id, newGoal);
-    }
-    setIsEditingGoal(false);
-  };
-
-  const handleGoalCancel = () => {
-    setNewGoal(member.todayGoal || '');
-    setIsEditingGoal(false);
-  };
 
   const handleYearlyGoalSave = () => {
     if (onYearlyGoalUpdate) {
@@ -127,70 +113,7 @@ export const DetailView: React.FC<DetailViewProps> = ({
             </div>
           </div>
 
-          {/* 集中度スコア */}
-          <div className="bg-gray-700/50 rounded-lg p-4">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-gray-300 text-lg">集中度スコア</span>
-              <span className="text-white font-bold text-2xl">{Math.round(member.focusScore)}%</span>
-            </div>
-            <div className="w-full bg-gray-600 rounded-full h-3">
-              <div
-                className={`h-3 rounded-full bg-gradient-to-r ${
-                  member.focusScore >= 80 ? 'from-green-400 to-emerald-500' :
-                  member.focusScore >= 50 ? 'from-yellow-400 to-orange-500' :
-                  'from-red-400 to-pink-500'
-                }`}
-                style={{ width: `${Math.round(member.focusScore)}%` }}
-              />
-            </div>
-          </div>
 
-          {/* 今日の目標 */}
-          <div className="bg-gray-700/50 rounded-lg p-4">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <Target className="w-5 h-5 text-yellow-400" />
-                <span className="text-gray-300 text-lg">今日の目標</span>
-              </div>
-              {member.id === 'current-user' && (
-                <button
-                  onClick={() => setIsEditingGoal(!isEditingGoal)}
-                  className="text-blue-400 hover:text-blue-300 text-sm"
-                >
-                  {isEditingGoal ? 'キャンセル' : '編集'}
-                </button>
-              )}
-            </div>
-            {isEditingGoal ? (
-              <div className="space-y-2">
-                <textarea
-                  value={newGoal}
-                  onChange={(e) => setNewGoal(e.target.value)}
-                  className="w-full bg-gray-600 border border-gray-500 rounded-lg p-3 text-white resize-none"
-                  rows={3}
-                  placeholder="今日の目標を入力してください"
-                />
-                <div className="flex gap-2">
-                  <button
-                    onClick={handleGoalSave}
-                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-                  >
-                    保存
-                  </button>
-                  <button
-                    onClick={handleGoalCancel}
-                    className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
-                  >
-                    キャンセル
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <p className="text-white text-lg">
-                {member.todayGoal || '目標が設定されていません'}
-              </p>
-            )}
-          </div>
 
           {/* 集中度グラフ */}
           <div className="bg-gray-700/50 rounded-lg p-4">
