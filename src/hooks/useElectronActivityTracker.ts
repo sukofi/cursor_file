@@ -179,7 +179,6 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
   const [focusHistory, setFocusHistory] = useState<FocusPoint[]>([]);
   const [dailyHistory, setDailyHistory] = useState<FocusPoint[]>([]);
   const [monthlyHistory, setMonthlyHistory] = useState<FocusPoint[]>([]);
-  const [yearlyHistory, setYearlyHistory] = useState<FocusPoint[]>([]);
   const [currentPeriod, setCurrentPeriod] = useState<ChartPeriod>('daily');
   const [activities, setActivities] = useState<TeamActivityData[]>([]);
   const [currentFocusScore, setCurrentFocusScore] = useState(85);
@@ -280,16 +279,6 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
           };
         }).reverse();
         
-      case 'yearly':
-        return Array.from({ length: 5 }, (_, i) => {
-          const year = now.getFullYear() - i;
-          const score = Math.max(0, Math.min(100, 65 + Math.random() * 30)); // 0-100の範囲に制限
-          return {
-            time: `${year}年`,
-            score: score
-          };
-        }).reverse();
-        
       default:
         return [];
     }
@@ -300,7 +289,6 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
     switch (currentPeriod) {
       case 'daily': return dailyHistory;
       case 'monthly': return monthlyHistory;
-      case 'yearly': return yearlyHistory;
       default: return dailyHistory;
     }
   };
@@ -762,24 +750,7 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
         return newHistory;
       });
 
-      // 年別データの更新
-      const thisYearName = `${today.getFullYear()}年`;
-      
-      setYearlyHistory(prev => {
-        const newHistory = [...prev];
-        const lastEntry = newHistory[newHistory.length - 1];
-        
-        if (lastEntry && lastEntry.time === thisYearName) {
-          const updatedScore = Math.round(lastEntry.score * 0.99 + newFocusScore * 0.01);
-          lastEntry.score = Math.max(0, Math.min(100, updatedScore)); // 0-100の範囲に制限
-        } else {
-          const clampedScore = Math.max(0, Math.min(100, newFocusScore)); // 0-100の範囲に制限
-          newHistory.push({ time: thisYearName, score: clampedScore });
-          if (newHistory.length > 5) newHistory.shift();
-        }
-        
-        return newHistory;
-      });
+
 
       // 現在の期間に応じてfocusHistoryを更新
       setFocusHistory(getCurrentPeriodData());
@@ -811,7 +782,7 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
   // 期間変更時にfocusHistoryを更新
   useEffect(() => {
     setFocusHistory(getCurrentPeriodData());
-  }, [currentPeriod, dailyHistory, monthlyHistory, yearlyHistory]);
+  }, [currentPeriod, dailyHistory, monthlyHistory]);
 
   // 初期化
   useEffect(() => {
@@ -865,7 +836,6 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
     // 期間別データを初期化
     setDailyHistory(generatePeriodData('daily'));
     setMonthlyHistory(generatePeriodData('monthly'));
-    setYearlyHistory(generatePeriodData('yearly'));
     
     // 初期の集中度履歴を日別データに設定
     setFocusHistory(generatePeriodData('daily'));
@@ -944,7 +914,7 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
   // currentUserをuseMemoで最適化
   const currentUser = useMemo(() => {
     return generateTeamMember();
-  }, [metrics.workStatus, metrics.currentApp, currentFocusScore, todayGoal, yearlyGoal, activities, dailyHistory, monthlyHistory, yearlyHistory, displayName, localStorage.getItem('user-profile'), isAdmin]);
+  }, [metrics.workStatus, metrics.currentApp, currentFocusScore, todayGoal, yearlyGoal, activities, dailyHistory, monthlyHistory, displayName, localStorage.getItem('user-profile'), isAdmin]);
 
   return {
     metrics,
@@ -958,7 +928,6 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
     currentPeriod,
     handlePeriodChange,
     dailyHistory,
-    monthlyHistory,
-    yearlyHistory
+    monthlyHistory
   };
 };

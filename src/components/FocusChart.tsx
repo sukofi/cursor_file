@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FocusPoint } from '../types';
 import { Calendar, TrendingUp, BarChart3 } from 'lucide-react';
 
-export type ChartPeriod = 'daily' | 'monthly' | 'yearly';
+export type ChartPeriod = 'daily' | 'monthly';
 
 interface FocusChartProps {
   data: FocusPoint[];
@@ -49,7 +49,6 @@ export const FocusChart: React.FC<FocusChartProps> = ({
     switch (period) {
       case 'daily': return '日別';
       case 'monthly': return '月別';
-      case 'yearly': return '年別';
     }
   };
 
@@ -57,7 +56,6 @@ export const FocusChart: React.FC<FocusChartProps> = ({
     switch (period) {
       case 'daily': return Calendar;
       case 'monthly': return BarChart3;
-      case 'yearly': return TrendingUp;
     }
   };
 
@@ -68,7 +66,7 @@ export const FocusChart: React.FC<FocusChartProps> = ({
         <div className="flex justify-between items-center">
           <h3 className="text-white font-semibold">集中度の推移</h3>
           <div className="flex bg-white/10 rounded-lg p-1 backdrop-blur-sm">
-            {(['daily', 'monthly', 'yearly'] as ChartPeriod[]).map((p) => {
+            {(['daily', 'monthly'] as ChartPeriod[]).map((p) => {
               const Icon = getPeriodIcon(p);
               return (
                 <button
