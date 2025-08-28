@@ -32,14 +32,16 @@ export const MemberCard: React.FC<MemberCardProps> = ({
         borderColor: 'rgba(250, 204, 21, 0.6)',
         boxShadow: '0 0 20px rgba(250, 204, 21, 0.6)',
         hoverBoxShadow: '0 0 30px rgba(250, 204, 21, 0.8)',
-        textColor: 'text-yellow-400'
+        textColor: 'text-yellow-400',
+        isPaused: true
       };
     } else if (workStatus === 'finished') {
       return {
         borderColor: 'rgba(156, 163, 175, 0.6)',
         boxShadow: '0 0 20px rgba(156, 163, 175, 0.6)',
         hoverBoxShadow: '0 0 30px rgba(156, 163, 175, 0.8)',
-        textColor: 'text-gray-400'
+        textColor: 'text-gray-400',
+        isPaused: false
       };
     }
     
@@ -49,35 +51,40 @@ export const MemberCard: React.FC<MemberCardProps> = ({
         borderColor: 'rgba(34, 211, 238, 0.6)',
         boxShadow: '0 0 20px rgba(34, 211, 238, 0.6)',
         hoverBoxShadow: '0 0 30px rgba(34, 211, 238, 0.8)',
-        textColor: 'text-cyan-400'
+        textColor: 'text-cyan-400',
+        isPaused: false
       };
     } else if (focusScore >= 60) {
       return {
         borderColor: 'rgba(74, 222, 128, 0.6)',
         boxShadow: '0 0 20px rgba(74, 222, 128, 0.6)',
         hoverBoxShadow: '0 0 30px rgba(74, 222, 128, 0.8)',
-        textColor: 'text-green-400'
+        textColor: 'text-green-400',
+        isPaused: false
       };
     } else if (focusScore >= 40) {
       return {
         borderColor: 'rgba(250, 204, 21, 0.6)',
         boxShadow: '0 0 20px rgba(250, 204, 21, 0.6)',
         hoverBoxShadow: '0 0 30px rgba(250, 204, 21, 0.8)',
-        textColor: 'text-yellow-400'
+        textColor: 'text-yellow-400',
+        isPaused: false
       };
     } else if (focusScore >= 20) {
       return {
         borderColor: 'rgba(250, 204, 21, 0.6)',
         boxShadow: '0 0 20px rgba(250, 204, 21, 0.6)',
         hoverBoxShadow: '0 0 30px rgba(250, 204, 21, 0.8)',
-        textColor: 'text-yellow-400'
+        textColor: 'text-yellow-400',
+        isPaused: false
       };
     } else {
       return {
         borderColor: 'rgba(156, 163, 175, 0.6)',
         boxShadow: '0 0 20px rgba(156, 163, 175, 0.6)',
         hoverBoxShadow: '0 0 30px rgba(156, 163, 175, 0.8)',
-        textColor: 'text-gray-400'
+        textColor: 'text-gray-400',
+        isPaused: false
       };
     }
   };
@@ -108,6 +115,16 @@ export const MemberCard: React.FC<MemberCardProps> = ({
         e.currentTarget.style.boxShadow = neonStyle.boxShadow;
       }}
     >
+      {/* 休憩中の一時停止オーバーレイ */}
+      {neonStyle.isPaused && (
+        <div className="absolute inset-0 bg-yellow-500/10 backdrop-blur-sm rounded-xl flex items-center justify-center pointer-events-none">
+          <div className="bg-yellow-500/80 backdrop-blur-sm rounded-full p-3">
+            <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+          </div>
+        </div>
+      )}
       {/* 管理者削除ボタン */}
       {isAdmin && member.id !== 'current-user' && onDeleteMember && (
         <button
@@ -148,47 +165,71 @@ export const MemberCard: React.FC<MemberCardProps> = ({
       </div>
 
       <div className="grid grid-cols-2 gap-4 mb-4">
-        <div className="text-center relative">
-          {/* 円グラフ */}
-          <div className="relative w-16 h-16 mx-auto mb-2 transition-all duration-500">
-            <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
-              {/* 背景円 */}
-              <circle
-                cx="18"
-                cy="18"
-                r="16"
-                fill="none"
-                stroke="rgba(255, 255, 255, 0.1)"
-                strokeWidth="2"
-              />
-              {/* 進捗円 */}
-              <circle
-                cx="18"
-                cy="18"
-                r="16"
-                fill="none"
-                stroke={neonStyle.borderColor}
-                strokeWidth="2"
-                strokeDasharray={`${(animatedScore / 100) * 100.53} 100.53`}
-                strokeLinecap="round"
-                style={{
-                  filter: `drop-shadow(0 0 8px ${neonStyle.borderColor})`,
-                  transition: 'stroke-dasharray 0.8s ease-in-out',
-                }}
-              />
-            </svg>
-            {/* 中央の数値 */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <p className={`text-lg font-bold ${neonStyle.textColor} transition-all duration-800`}>
-                {animatedScore}
-              </p>
+                  <div className="text-center relative">
+            {/* 円グラフ */}
+            <div className="relative w-16 h-16 mx-auto mb-2 transition-all duration-500">
+              <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
+                {/* 背景円 */}
+                <circle
+                  cx="18"
+                  cy="18"
+                  r="16"
+                  fill="none"
+                  stroke="rgba(255, 255, 255, 0.1)"
+                  strokeWidth="2"
+                />
+                {/* 進捗円 */}
+                <circle
+                  cx="18"
+                  cy="18"
+                  r="16"
+                  fill="none"
+                  stroke={neonStyle.borderColor}
+                  strokeWidth="2"
+                  strokeDasharray={`${(animatedScore / 100) * 100.53} 100.53`}
+                  strokeLinecap="round"
+                  style={{
+                    filter: `drop-shadow(0 0 8px ${neonStyle.borderColor})`,
+                    transition: 'stroke-dasharray 0.8s ease-in-out',
+                  }}
+                />
+              </svg>
+              {/* 中央の数値 */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <p className={`text-lg font-bold ${neonStyle.textColor} transition-all duration-800`}>
+                  {animatedScore}
+                </p>
+              </div>
+              {/* 休憩中の一時停止アイコン */}
+              {neonStyle.isPaused && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="bg-yellow-500/80 backdrop-blur-sm rounded-full p-1">
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+              )}
             </div>
+            <p className="text-gray-400 text-xs">
+              {neonStyle.isPaused ? '集中度（一時停止）' : '集中度'}
+            </p>
           </div>
-          <p className="text-gray-400 text-xs">集中度</p>
-        </div>
-        <div className="text-center">
+        <div className="text-center relative">
           <p className="text-2xl font-bold text-white">{Math.round(member.dailyStats.totalHours * 60)}分</p>
-          <p className="text-gray-400 text-xs">作業時間</p>
+          <p className="text-gray-400 text-xs">
+            {neonStyle.isPaused ? '作業時間（一時停止）' : '作業時間'}
+          </p>
+          {/* 休憩中の一時停止インジケーター */}
+          {neonStyle.isPaused && (
+            <div className="absolute -top-1 -right-1">
+              <div className="bg-yellow-500 rounded-full p-1 animate-pulse">
+                <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

@@ -874,7 +874,12 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
 
     // 作業状態に応じて集中度を調整（整数に丸める）
     let adjustedFocusScore = Math.round(currentFocusScore);
-    if (metrics.workStatus === 'break' || metrics.workStatus === 'finished') {
+    // 休憩中や作業終了時でも集中度を0にしない（一時停止状態を表現）
+    if (metrics.workStatus === 'break') {
+      // 休憩中は最後の集中度を保持（一時停止状態）
+      adjustedFocusScore = Math.round(currentFocusScore);
+    } else if (metrics.workStatus === 'finished') {
+      // 作業終了時のみ0にする
       adjustedFocusScore = 0;
     }
 
