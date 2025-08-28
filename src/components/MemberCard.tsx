@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { User, Crown, Trash2 } from 'lucide-react';
+import { User, Crown } from 'lucide-react';
 import { TeamMember } from '../types';
 
 interface MemberCardProps {
@@ -7,22 +7,15 @@ interface MemberCardProps {
   onClick: () => void;
   onGoalUpdate?: (memberId: string, newGoal: string) => void;
   isAdmin?: boolean;
-  onDeleteMember?: (memberId: string) => void;
 }
 
 export const MemberCard: React.FC<MemberCardProps> = ({ 
   member, 
   onClick, 
   onGoalUpdate,
-  isAdmin = false,
-  onDeleteMember
+  isAdmin = false
 }) => {
-  const handleDeleteClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (onDeleteMember && window.confirm(`${member.name}を削除しますか？`)) {
-      onDeleteMember(member.id);
-    }
-  };
+
 
   // 集中度に基づくネオンカラーの計算
   const getNeonStyle = (focusScore: number, workStatus?: string) => {
@@ -122,16 +115,7 @@ export const MemberCard: React.FC<MemberCardProps> = ({
           </div>
         </div>
       )}
-      {/* 管理者削除ボタン */}
-      {isAdmin && member.id !== 'current-user' && onDeleteMember && (
-        <button
-          onClick={handleDeleteClick}
-          className="absolute top-2 right-2 p-1 bg-red-500/20 backdrop-blur-sm border border-red-500/30 rounded-lg text-red-400 hover:bg-red-500/30 transition-all duration-200"
-          title="メンバーを削除"
-        >
-          <Trash2 className="w-4 h-4" />
-        </button>
-      )}
+
 
       <div className="flex items-center gap-4 mb-4">
         <div className="relative">
@@ -228,19 +212,7 @@ export const MemberCard: React.FC<MemberCardProps> = ({
         <p className="text-white text-sm line-clamp-2">{member.todayGoal || '目標が設定されていません'}</p>
       </div>
 
-      {/* 管理者のみ表示される削除ボタン */}
-      {isAdmin && member.id !== 'current-user' && onDeleteMember && (
-        <div className="mt-4 pt-3 border-t border-gray-600/30">
-          <button
-            onClick={handleDeleteClick}
-            className="w-full px-3 py-2 bg-red-500/10 backdrop-blur-sm border border-red-500/20 rounded-lg text-red-400 hover:bg-red-500/20 transition-all duration-200 text-sm opacity-60 hover:opacity-100"
-            title="メンバーを削除"
-          >
-            <Trash2 className="w-4 h-4 inline mr-2" />
-            削除
-          </button>
-        </div>
-      )}
+
     </div>
   );
 };

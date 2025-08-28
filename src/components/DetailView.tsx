@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, User, Target, Clock, TrendingUp, Activity } from 'lucide-react';
+import { X, User, Target, Clock, TrendingUp, Activity, Trash2 } from 'lucide-react';
 import { TeamMember } from '../types';
 import { FocusChart, ChartPeriod } from './FocusChart';
 
@@ -11,6 +11,8 @@ interface DetailViewProps {
   onYearlyGoalUpdate?: (memberId: string, newYearlyGoal: string) => void;
   currentPeriod?: ChartPeriod;
   onPeriodChange?: (period: ChartPeriod) => void;
+  isAdmin?: boolean;
+  onDeleteMember?: (memberId: string) => void;
 }
 
 export const DetailView: React.FC<DetailViewProps> = ({ 
@@ -20,7 +22,9 @@ export const DetailView: React.FC<DetailViewProps> = ({
   onGoalUpdate,
   onYearlyGoalUpdate,
   currentPeriod = 'daily',
-  onPeriodChange
+  onPeriodChange,
+  isAdmin = false,
+  onDeleteMember
 }) => {
   if (!isOpen) return null;
 
@@ -51,6 +55,13 @@ export const DetailView: React.FC<DetailViewProps> = ({
   const handleYearlyGoalCancel = () => {
     setNewYearlyGoal(member.yearlyGoal || '');
     setIsEditingYearlyGoal(false);
+  };
+
+  const handleDeleteClick = () => {
+    if (onDeleteMember && window.confirm(`${member.name}を削除しますか？`)) {
+      onDeleteMember(member.id);
+      onClose();
+    }
   };
 
   return (
@@ -224,6 +235,20 @@ export const DetailView: React.FC<DetailViewProps> = ({
               </p>
             )}
           </div>
+
+          {/* 管理者のみ表示される削除ボタン */}
+          {isAdmin && member.id !== 'current-user' && onDeleteMember && (
+            <div className="pt-6 border-t border-gray-600/30">
+              <button
+                onClick={handleDeleteClick}
+                className="w-full px-4 py-3 bg-red-500/10 backdrop-blur-sm border border-red-500/20 rounded-lg text-red-400 hover:bg-red-500/20 transition-all duration-200 text-sm opacity-60 hover:opacity-100"
+                title="メンバーを削除"
+              >
+                <Trash2 className="w-4 h-4 inline mr-2" />
+                メンバーを削除
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

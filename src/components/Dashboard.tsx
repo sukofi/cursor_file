@@ -304,7 +304,6 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 onClick={() => onMemberSelect(member)} 
                 onGoalUpdate={onGoalUpdate}
                 isAdmin={isAdmin}
-                onDeleteMember={onDeleteMember}
               />
             ))}
           </div>
@@ -355,6 +354,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
         onYearlyGoalUpdate={onYearlyGoalUpdate}
         currentPeriod="daily"
         onPeriodChange={() => {}}
+        isAdmin={isAdmin}
+        onDeleteMember={onDeleteMember}
       />
 
       {/* AddMember モーダル */}
