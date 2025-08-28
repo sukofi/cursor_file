@@ -83,6 +83,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   dbFinishWork: (userId: string) => ipcRenderer.invoke('db-finish-work', userId),
   dbUpdateUserGoal: (userId: string, goal: string) => ipcRenderer.invoke('db-update-user-goal', userId, goal),
   dbUpdateUserYearlyGoal: (userId: string, yearlyGoal: string) => ipcRenderer.invoke('db-update-user-yearly-goal', userId, yearlyGoal),
+  dbGetUserGoal: (userId: string) => ipcRenderer.invoke('db-get-user-goal', userId),
   dbGetUserStats: (userId: string, date: string) => ipcRenderer.invoke('db-get-user-stats', userId, date),
   dbUpdateUserStats: (userId: string, stats: any) => ipcRenderer.invoke('db-update-user-stats', userId, stats),
 });

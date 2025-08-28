@@ -52,6 +52,7 @@ export interface ElectronAPI {
   dbFinishWork: (userId: string) => Promise<{ success: boolean }>;
   dbUpdateUserGoal: (userId: string, goal: string) => Promise<{ success: boolean }>;
   dbUpdateUserYearlyGoal: (userId: string, yearlyGoal: string) => Promise<{ success: boolean }>;
+  dbGetUserGoal: (userId: string) => Promise<{ todayGoal?: string; yearlyGoal?: string } | null>;
   dbGetUserStats: (userId: string, date: string) => Promise<any | null>;
   dbUpdateUserStats: (userId: string, stats: any) => Promise<{ success: boolean }>;
   dbClearAllData: () => Promise<{ success: boolean; message?: string; deletedCount?: number }>;

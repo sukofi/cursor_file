@@ -188,15 +188,59 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
   const [yearlyGoal, setYearlyGoal] = useState('新しい技術を習得し、プロジェクトを完成させる');
   
   // 目標更新関数
-  const updateGoal = (newGoal: string) => {
+  const updateGoal = async (newGoal: string) => {
     console.log('useElectronActivityTracker: 目標更新:', newGoal);
     setTodayGoal(newGoal);
+    
+    // データベースに保存
+    try {
+      const userId = localStorage.getItem('userId');
+      if (userId && window.electronAPI?.dbUpdateUserGoal) {
+        await window.electronAPI.dbUpdateUserGoal(userId, newGoal);
+        console.log('useElectronActivityTracker: 目標をデータベースに保存');
+      }
+    } catch (error) {
+      console.error('useElectronActivityTracker: 目標保存エラー:', error);
+    }
   };
 
   // 今年の目標更新関数
-  const updateYearlyGoal = (newYearlyGoal: string) => {
+  const updateYearlyGoal = async (newYearlyGoal: string) => {
     console.log('useElectronActivityTracker: 今年の目標更新:', newYearlyGoal);
     setYearlyGoal(newYearlyGoal);
+    
+    // データベースに保存
+    try {
+      const userId = localStorage.getItem('userId');
+      if (userId && window.electronAPI?.dbUpdateUserYearlyGoal) {
+        await window.electronAPI.dbUpdateUserYearlyGoal(userId, newYearlyGoal);
+        console.log('useElectronActivityTracker: 年間目標をデータベースに保存');
+      }
+    } catch (error) {
+      console.error('useElectronActivityTracker: 年間目標保存エラー:', error);
+    }
+  };
+
+  // 目標をデータベースから読み込む関数
+  const loadUserGoals = async () => {
+    try {
+      const userId = localStorage.getItem('userId');
+      if (userId && window.electronAPI?.dbGetUserGoal) {
+        const goals = await window.electronAPI.dbGetUserGoal(userId);
+        if (goals) {
+          if (goals.todayGoal) {
+            setTodayGoal(goals.todayGoal);
+            console.log('useElectronActivityTracker: 今日の目標を読み込み:', goals.todayGoal);
+          }
+          if (goals.yearlyGoal) {
+            setYearlyGoal(goals.yearlyGoal);
+            console.log('useElectronActivityTracker: 年間目標を読み込み:', goals.yearlyGoal);
+          }
+        }
+      }
+    } catch (error) {
+      console.error('useElectronActivityTracker: 目標読み込みエラー:', error);
+    }
   };
 
   // 期間変更ハンドラー
@@ -825,6 +869,9 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
     
     // 初期の集中度履歴を日別データに設定
     setFocusHistory(generatePeriodData('daily'));
+    
+    // 目標をデータベースから読み込み
+    loadUserGoals();
   }, []);
 
   // TeamMemberオブジェクトの生成
