@@ -32,17 +32,14 @@ export const MemberCard: React.FC<MemberCardProps> = ({
         borderColor: 'rgba(250, 204, 21, 0.6)',
         boxShadow: '0 0 20px rgba(250, 204, 21, 0.6)',
         hoverBoxShadow: '0 0 30px rgba(250, 204, 21, 0.8)',
-        textColor: 'text-yellow-400',
-        isPaused: true
+        textColor: 'text-yellow-400'
       };
     } else if (workStatus === 'finished') {
       return {
-        borderColor: 'rgba(239, 68, 68, 0.6)',
-        boxShadow: '0 0 20px rgba(239, 68, 68, 0.6)',
-        hoverBoxShadow: '0 0 30px rgba(239, 68, 68, 0.8)',
-        textColor: 'text-red-400',
-        isPaused: false,
-        isFinished: true
+        borderColor: 'rgba(156, 163, 175, 0.6)',
+        boxShadow: '0 0 20px rgba(156, 163, 175, 0.6)',
+        hoverBoxShadow: '0 0 30px rgba(156, 163, 175, 0.8)',
+        textColor: 'text-gray-400'
       };
     }
     
@@ -52,45 +49,35 @@ export const MemberCard: React.FC<MemberCardProps> = ({
         borderColor: 'rgba(34, 211, 238, 0.6)',
         boxShadow: '0 0 20px rgba(34, 211, 238, 0.6)',
         hoverBoxShadow: '0 0 30px rgba(34, 211, 238, 0.8)',
-        textColor: 'text-cyan-400',
-        isPaused: false,
-        isFinished: false
+        textColor: 'text-cyan-400'
       };
     } else if (focusScore >= 60) {
       return {
         borderColor: 'rgba(74, 222, 128, 0.6)',
         boxShadow: '0 0 20px rgba(74, 222, 128, 0.6)',
         hoverBoxShadow: '0 0 30px rgba(74, 222, 128, 0.8)',
-        textColor: 'text-green-400',
-        isPaused: false,
-        isFinished: false
+        textColor: 'text-green-400'
       };
     } else if (focusScore >= 40) {
       return {
         borderColor: 'rgba(250, 204, 21, 0.6)',
         boxShadow: '0 0 20px rgba(250, 204, 21, 0.6)',
         hoverBoxShadow: '0 0 30px rgba(250, 204, 21, 0.8)',
-        textColor: 'text-yellow-400',
-        isPaused: false,
-        isFinished: false
+        textColor: 'text-yellow-400'
       };
     } else if (focusScore >= 20) {
       return {
         borderColor: 'rgba(250, 204, 21, 0.6)',
         boxShadow: '0 0 20px rgba(250, 204, 21, 0.6)',
         hoverBoxShadow: '0 0 30px rgba(250, 204, 21, 0.8)',
-        textColor: 'text-yellow-400',
-        isPaused: false,
-        isFinished: false
+        textColor: 'text-yellow-400'
       };
     } else {
       return {
         borderColor: 'rgba(156, 163, 175, 0.6)',
         boxShadow: '0 0 20px rgba(156, 163, 175, 0.6)',
         hoverBoxShadow: '0 0 30px rgba(156, 163, 175, 0.8)',
-        textColor: 'text-gray-400',
-        isPaused: false,
-        isFinished: false
+        textColor: 'text-gray-400'
       };
     }
   };
@@ -106,11 +93,13 @@ export const MemberCard: React.FC<MemberCardProps> = ({
     return () => clearTimeout(timer);
   }, [member.focusScore]);
 
+  // 休憩時と終了時のオーバーレイ表示
+  const isPaused = member.workStatus === 'break';
+  const isFinished = member.workStatus === 'finished';
+
   return (
     <div 
-      className={`backdrop-blur-lg bg-white/10 rounded-xl border p-6 cursor-pointer hover:bg-white/15 transition-all duration-300 relative group ${
-        neonStyle.isFinished ? 'min-h-[280px]' : ''
-      }`}
+      className="backdrop-blur-lg bg-white/10 rounded-xl border p-6 cursor-pointer hover:bg-white/15 transition-all duration-300 relative group"
       onClick={onClick}
       style={{
         borderColor: neonStyle.borderColor,
@@ -123,22 +112,22 @@ export const MemberCard: React.FC<MemberCardProps> = ({
         e.currentTarget.style.boxShadow = neonStyle.boxShadow;
       }}
     >
-      {/* 休憩中の一時停止オーバーレイ */}
-      {neonStyle.isPaused && (
-        <div className="absolute inset-0 bg-yellow-500/10 backdrop-blur-sm rounded-xl flex items-center justify-center pointer-events-none">
-          <div className="bg-yellow-500/80 backdrop-blur-sm rounded-full p-4">
+      {/* 休憩時のポーズオーバーレイ */}
+      {isPaused && (
+        <div className="absolute inset-0 bg-yellow-500/10 backdrop-blur-sm rounded-xl flex items-center justify-center pointer-events-none z-10">
+          <div className="bg-yellow-500/80 backdrop-blur-sm rounded-full p-4 animate-pulse">
             <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
             </svg>
           </div>
         </div>
       )}
-      
-      {/* 作業終了時の完了オーバーレイ */}
-      {neonStyle.isFinished && (
-        <div className="absolute inset-0 bg-red-500/5 backdrop-blur-sm rounded-xl flex items-center justify-center pointer-events-none">
-          <div className="bg-red-500/90 backdrop-blur-sm rounded-full p-3 shadow-lg">
-            <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+
+      {/* 終了時のチェックマークオーバーレイ */}
+      {isFinished && (
+        <div className="absolute inset-0 bg-red-500/5 backdrop-blur-sm rounded-xl flex items-center justify-center pointer-events-none z-10">
+          <div className="bg-red-500/80 backdrop-blur-sm rounded-full p-4">
+            <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
           </div>
@@ -183,62 +172,55 @@ export const MemberCard: React.FC<MemberCardProps> = ({
         </div>
       </div>
 
-            <div className="grid grid-cols-2 gap-4 mb-4">
-        <div className="text-center relative">
-          {/* 円グラフ */}
-          <div className="relative w-16 h-16 mx-auto mb-2 transition-all duration-500">
-            <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
-              {/* 背景円 */}
-              <circle
-                cx="18"
-                cy="18"
-                r="16"
-                fill="none"
-                stroke="rgba(255, 255, 255, 0.1)"
-                strokeWidth="2"
-              />
-              {/* 進捗円 */}
-              <circle
-                cx="18"
-                cy="18"
-                r="16"
-                fill="none"
-                stroke={neonStyle.borderColor}
-                strokeWidth="2"
-                strokeDasharray={`${(neonStyle.isFinished ? 
-                  Math.round(member.focusHistory.reduce((sum, item) => sum + item.score, 0) / Math.max(member.focusHistory.length, 1)) : 
-                  animatedScore) / 100 * 100.53} 100.53`}
-                strokeLinecap="round"
-                style={{
-                  filter: `drop-shadow(0 0 8px ${neonStyle.borderColor})`,
-                  transition: 'stroke-dasharray 0.8s ease-in-out',
-                }}
-              />
-            </svg>
-            {/* 中央の数値 */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <p className={`text-lg font-bold ${neonStyle.textColor} transition-all duration-800`}>
-                {neonStyle.isFinished ? 
-                  Math.round(member.focusHistory.reduce((sum, item) => sum + item.score, 0) / Math.max(member.focusHistory.length, 1)) : 
-                  animatedScore
-                }
-              </p>
+      <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div className="text-center relative">
+            {/* 円グラフ */}
+            <div className="relative w-16 h-16 mx-auto mb-2 transition-all duration-500">
+              <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
+                {/* 背景円 */}
+                <circle
+                  cx="18"
+                  cy="18"
+                  r="16"
+                  fill="none"
+                  stroke="rgba(255, 255, 255, 0.1)"
+                  strokeWidth="2"
+                />
+                {/* 進捗円 */}
+                <circle
+                  cx="18"
+                  cy="18"
+                  r="16"
+                  fill="none"
+                  stroke={neonStyle.borderColor}
+                  strokeWidth="2"
+                  strokeDasharray={`${(animatedScore / 100) * 100.53} 100.53`}
+                  strokeLinecap="round"
+                  style={{
+                    filter: `drop-shadow(0 0 8px ${neonStyle.borderColor})`,
+                    transition: 'stroke-dasharray 0.8s ease-in-out',
+                  }}
+                />
+              </svg>
+              {/* 中央の数値 */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <p className={`text-lg font-bold ${neonStyle.textColor} transition-all duration-800`}>
+                  {isFinished ? Math.round(member.focusHistory.reduce((a, b) => a + b.score, 0) / Math.max(member.focusHistory.length, 1)) : animatedScore}
+                </p>
+              </div>
             </div>
- 
+            <p className="text-gray-400 text-xs">
+              {isFinished ? '平均集中度' : '集中度'}
+            </p>
           </div>
-          <p className="text-gray-400 text-xs">
-            {neonStyle.isFinished ? '平均集中度' : '集中度'}
-          </p>
-        </div>
-        <div className="text-center relative">
+        <div className="text-center">
           <p className="text-2xl font-bold text-white">{Math.round(member.dailyStats.totalHours * 60)}分</p>
           <p className="text-gray-400 text-xs">
-            {neonStyle.isFinished ? '本日の作業時間' : '作業時間'}
+            {isFinished ? '本日の作業時間' : '作業時間'}
           </p>
         </div>
       </div>
 
-      {/* 今日の目標を表示 */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <span className="text-gray-300 text-sm">今日の目標</span>
@@ -256,7 +238,6 @@ export const MemberCard: React.FC<MemberCardProps> = ({
         </div>
         <p className="text-white text-sm line-clamp-2">{member.todayGoal || '目標が設定されていません'}</p>
       </div>
-
     </div>
   );
 };

@@ -2,10 +2,6 @@ import { contextBridge, ipcRenderer } from 'electron';
 
 // レンダラープロセスで使用するAPIを定義
 const electronAPI = {
-  // 環境変数
-  getEnv: (key: string) => process.env[key],
-  
-  // アクティビティトラッキング関連
   // アクティビティトラッキング関連
   getCurrentActivity: () => ipcRenderer.invoke('get-current-activity'),
   startTracking: () => ipcRenderer.invoke('start-tracking'),
@@ -78,11 +74,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   dbCreateInvite: (inviteData: any) => ipcRenderer.invoke('db-create-invite', inviteData),
   dbGetInvite: (email: string) => ipcRenderer.invoke('db-get-invite', email),
   dbMarkInviteUsed: (email: string) => ipcRenderer.invoke('db-mark-invite-used', email),
-  dbGetAllInvites: () => ipcRenderer.invoke('db-get-all-invites'),
-  dbGetInviteById: (inviteId: string) => ipcRenderer.invoke('db-get-invite-by-id', inviteId),
-  dbDeleteInvite: (inviteId: string) => ipcRenderer.invoke('db-delete-invite', inviteId),
-  dbGetInvitesByUser: (userId: string) => ipcRenderer.invoke('db-get-invites-by-user', userId),
-  dbGetActiveInvites: () => ipcRenderer.invoke('db-get-active-invites'),
   dbClearAllData: () => ipcRenderer.invoke('db-clear-all-data'),
   dbCleanDummyData: () => ipcRenderer.invoke('db-clean-dummy-data'),
   
@@ -92,7 +83,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   dbFinishWork: (userId: string) => ipcRenderer.invoke('db-finish-work', userId),
   dbUpdateUserGoal: (userId: string, goal: string) => ipcRenderer.invoke('db-update-user-goal', userId, goal),
   dbUpdateUserYearlyGoal: (userId: string, yearlyGoal: string) => ipcRenderer.invoke('db-update-user-yearly-goal', userId, yearlyGoal),
-  dbGetUserGoal: (userId: string) => ipcRenderer.invoke('db-get-user-goal', userId),
   dbGetUserStats: (userId: string, date: string) => ipcRenderer.invoke('db-get-user-stats', userId, date),
   dbUpdateUserStats: (userId: string, stats: any) => ipcRenderer.invoke('db-update-user-stats', userId, stats),
 });

@@ -26,12 +26,7 @@ class DatabaseManager {
         createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
         lastLoginAt DATETIME,
         resetToken TEXT,
-        resetTokenExpires DATETIME,
-        workStatus TEXT DEFAULT 'finished',
-        currentActivity TEXT DEFAULT '',
-        lastWorkStart DATETIME,
-        lastBreakStart DATETIME,
-        lastWorkEnd DATETIME
+        resetTokenExpires DATETIME
       )
     `);
 
@@ -88,54 +83,8 @@ class DatabaseManager {
       )
     `);
 
-    // 既存のテーブルにカラムを追加（マイグレーション）
-    this.migrateDatabase();
-    
     // 初期管理者ユーザーを作成
     this.createInitialAdmin();
-  }
-
-  private migrateDatabase() {
-    try {
-      // workStatusカラムの追加
-      this.db.exec('ALTER TABLE users ADD COLUMN workStatus TEXT DEFAULT "finished"');
-      console.log('✅ workStatusカラムを追加しました');
-    } catch (error) {
-      // カラムが既に存在する場合はエラーを無視
-      console.log('ℹ️ workStatusカラムは既に存在します');
-    }
-
-    try {
-      // currentActivityカラムの追加
-      this.db.exec('ALTER TABLE users ADD COLUMN currentActivity TEXT DEFAULT ""');
-      console.log('✅ currentActivityカラムを追加しました');
-    } catch (error) {
-      console.log('ℹ️ currentActivityカラムは既に存在します');
-    }
-
-    try {
-      // lastWorkStartカラムの追加
-      this.db.exec('ALTER TABLE users ADD COLUMN lastWorkStart DATETIME');
-      console.log('✅ lastWorkStartカラムを追加しました');
-    } catch (error) {
-      console.log('ℹ️ lastWorkStartカラムは既に存在します');
-    }
-
-    try {
-      // lastBreakStartカラムの追加
-      this.db.exec('ALTER TABLE users ADD COLUMN lastBreakStart DATETIME');
-      console.log('✅ lastBreakStartカラムを追加しました');
-    } catch (error) {
-      console.log('ℹ️ lastBreakStartカラムは既に存在します');
-    }
-
-    try {
-      // lastWorkEndカラムの追加
-      this.db.exec('ALTER TABLE users ADD COLUMN lastWorkEnd DATETIME');
-      console.log('✅ lastWorkEndカラムを追加しました');
-    } catch (error) {
-      console.log('ℹ️ lastWorkEndカラムは既に存在します');
-    }
   }
 
   private createInitialAdmin() {
@@ -324,49 +273,9 @@ class DatabaseManager {
       VALUES (?, ?, ?, ?, ?, ?)
     `);
     
-    // 安全なDate変換
-    let invitedAt: string;
-    let expiresAt: string;
-    
-    try {
-      // invitedAtの処理
-      if (invite.invitedAt instanceof Date) {
-        invitedAt = invite.invitedAt.toISOString();
-      } else if (typeof invite.invitedAt === 'string') {
-        invitedAt = invite.invitedAt;
-      } else {
-        invitedAt = new Date().toISOString();
-      }
-      
-      // expiresAtの処理
-      if (invite.expiresAt instanceof Date) {
-        expiresAt = invite.expiresAt.toISOString();
-      } else if (typeof invite.expiresAt === 'string') {
-        expiresAt = invite.expiresAt;
-      } else {
-        expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
-      }
-      
-      console.log('招待データ作成:', {
-        id,
-        email: invite.email,
-        invitedBy: invite.invitedBy,
-        invitedAt,
-        expiresAt,
-        isUsed: invite.isUsed
-      });
-      
-      // isUsedを数値に変換
-      const isUsedValue = invite.isUsed === true ? 1 : invite.isUsed === false ? 0 : Number(invite.isUsed);
-      
-      stmt.run(id, invite.email, invite.invitedBy, invitedAt, expiresAt, isUsedValue);
-      return id;
-      
-    } catch (error) {
-      console.error('招待作成エラー（詳細）:', error);
-      console.error('招待データ:', invite);
-      throw error;
-    }
+    stmt.run(id, invite.email, invite.invitedBy, invite.invitedAt.toISOString(), 
+             invite.expiresAt.toISOString(), invite.isUsed);
+    return id;
   }
 
   public getInviteByEmail(email: string): InviteData | null {
@@ -378,33 +287,6 @@ class DatabaseManager {
     const stmt = this.db.prepare('UPDATE invites SET isUsed = TRUE WHERE email = ?');
     const result = stmt.run(email);
     return result.changes > 0;
-  }
-
-  // 招待管理機能
-  public getAllInvites(): InviteData[] {
-    const stmt = this.db.prepare('SELECT * FROM invites ORDER BY invitedAt DESC');
-    return stmt.all() as InviteData[];
-  }
-
-  public getInviteById(inviteId: string): InviteData | null {
-    const stmt = this.db.prepare('SELECT * FROM invites WHERE id = ?');
-    return stmt.get(inviteId) as InviteData | null;
-  }
-
-  public deleteInvite(inviteId: string): boolean {
-    const stmt = this.db.prepare('DELETE FROM invites WHERE id = ?');
-    const result = stmt.run(inviteId);
-    return result.changes > 0;
-  }
-
-  public getInvitesByUser(userId: string): InviteData[] {
-    const stmt = this.db.prepare('SELECT * FROM invites WHERE invitedBy = ? ORDER BY invitedAt DESC');
-    return stmt.all(userId) as InviteData[];
-  }
-
-  public getActiveInvites(): InviteData[] {
-    const stmt = this.db.prepare('SELECT * FROM invites WHERE isUsed = FALSE AND expiresAt > datetime("now") ORDER BY invitedAt DESC');
-    return stmt.all() as InviteData[];
   }
 
 
@@ -442,34 +324,20 @@ class DatabaseManager {
 
   public updateUserGoal(userId: string, goal: string): boolean {
     const stmt = this.db.prepare(`
-      INSERT OR REPLACE INTO goals (id, userId, todayGoal, updatedAt)
-      VALUES (?, ?, ?, ?)
+      INSERT OR REPLACE INTO goals (userId, todayGoal, updatedAt)
+      VALUES (?, ?, ?)
     `);
-    const goalId = `goal-${userId}-${Date.now()}`;
-    const result = stmt.run(goalId, userId, goal, new Date().toISOString());
+    const result = stmt.run(userId, goal, new Date().toISOString());
     return result.changes > 0;
   }
 
   public updateUserYearlyGoal(userId: string, yearlyGoal: string): boolean {
     const stmt = this.db.prepare(`
-      INSERT OR REPLACE INTO goals (id, userId, yearlyGoal, updatedAt)
-      VALUES (?, ?, ?, ?)
+      INSERT OR REPLACE INTO goals (userId, yearlyGoal, updatedAt)
+      VALUES (?, ?, ?)
     `);
-    const goalId = `yearly-goal-${userId}-${Date.now()}`;
-    const result = stmt.run(goalId, userId, yearlyGoal, new Date().toISOString());
+    const result = stmt.run(userId, yearlyGoal, new Date().toISOString());
     return result.changes > 0;
-  }
-
-  public getUserGoal(userId: string): { todayGoal?: string; yearlyGoal?: string } | null {
-    const stmt = this.db.prepare(`
-      SELECT todayGoal, yearlyGoal 
-      FROM goals 
-      WHERE userId = ? 
-      ORDER BY updatedAt DESC 
-      LIMIT 1
-    `);
-    const result = stmt.get(userId) as { todayGoal?: string; yearlyGoal?: string } | undefined;
-    return result || null;
   }
 
   public getUserStats(userId: string, date: string): DatabaseStats | null {

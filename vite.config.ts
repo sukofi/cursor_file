@@ -17,9 +17,5 @@ export default defineConfig({
   server: {
     port: 5173,
   },
-  // 環境変数をクライアントに公開
-  define: {
-    'process.env': process.env
-  }
 });
 

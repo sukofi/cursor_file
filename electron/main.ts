@@ -3,10 +3,6 @@ import activeWin from 'active-win';
 import * as path from 'path';
 import { exec } from 'child_process';
 import { databaseManager } from './database';
-import dotenv from 'dotenv';
-
-// 環境変数を読み込み
-dotenv.config();
 
 // promisifyの代替実装
 function promisifyExec(command: string): Promise<{ stdout: string; stderr: string }> {
@@ -468,8 +464,6 @@ ipcMain.handle('db-save-stats', async (_, statsData: any) => {
 
 ipcMain.handle('db-create-invite', async (_, inviteData: any) => {
   try {
-    console.log('IPC招待データ受信:', inviteData);
-    
     const inviteId = databaseManager.createInvite(inviteData);
     return { success: true, inviteId };
   } catch (error) {
@@ -494,57 +488,6 @@ ipcMain.handle('db-mark-invite-used', async (_, email: string) => {
   } catch (error) {
     console.error('招待使用済みマークエラー:', error);
     throw error;
-  }
-});
-
-// 招待管理機能
-ipcMain.handle('db-get-all-invites', async () => {
-  try {
-    const invites = databaseManager.getAllInvites();
-    return { success: true, invites };
-  } catch (error) {
-    console.error('招待一覧取得エラー:', error);
-    return { success: false, error: error.message };
-  }
-});
-
-ipcMain.handle('db-get-invite-by-id', async (_, inviteId: string) => {
-  try {
-    const invite = databaseManager.getInviteById(inviteId);
-    return { success: true, invite };
-  } catch (error) {
-    console.error('招待取得エラー:', error);
-    return { success: false, error: error.message };
-  }
-});
-
-ipcMain.handle('db-delete-invite', async (_, inviteId: string) => {
-  try {
-    const success = databaseManager.deleteInvite(inviteId);
-    return { success };
-  } catch (error) {
-    console.error('招待削除エラー:', error);
-    return { success: false, error: error.message };
-  }
-});
-
-ipcMain.handle('db-get-invites-by-user', async (_, userId: string) => {
-  try {
-    const invites = databaseManager.getInvitesByUser(userId);
-    return { success: true, invites };
-  } catch (error) {
-    console.error('ユーザー招待一覧取得エラー:', error);
-    return { success: false, error: error.message };
-  }
-});
-
-ipcMain.handle('db-get-active-invites', async () => {
-  try {
-    const invites = databaseManager.getActiveInvites();
-    return { success: true, invites };
-  } catch (error) {
-    console.error('アクティブ招待一覧取得エラー:', error);
-    return { success: false, error: error.message };
   }
 });
 
@@ -596,16 +539,6 @@ ipcMain.handle('db-update-user-yearly-goal', async (_, userId: string, yearlyGoa
   } catch (error) {
     console.error('ユーザー年間目標更新エラー:', error);
     throw error;
-  }
-});
-
-ipcMain.handle('db-get-user-goal', async (_, userId: string) => {
-  try {
-    const goal = databaseManager.getUserGoal(userId);
-    return { success: true, goal };
-  } catch (error) {
-    console.error('ユーザー目標取得エラー:', error);
-    return { success: false, error: error.message };
   }
 });
 

@@ -188,45 +188,15 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
   const [yearlyGoal, setYearlyGoal] = useState('新しい技術を習得し、プロジェクトを完成させる');
   
   // 目標更新関数
-  const updateGoal = async (newGoal: string) => {
+  const updateGoal = (newGoal: string) => {
     console.log('useElectronActivityTracker: 目標更新:', newGoal);
     setTodayGoal(newGoal);
-    
-    // データベースに保存
-    const userId = localStorage.getItem('userId');
-    if (userId && window.electronAPI?.dbUpdateUserGoal) {
-      try {
-        const result = await window.electronAPI.dbUpdateUserGoal(userId, newGoal);
-        if (result.success) {
-          console.log('目標をデータベースに保存しました');
-        } else {
-          console.error('目標の保存に失敗しました');
-        }
-      } catch (error) {
-        console.error('目標保存エラー:', error);
-      }
-    }
   };
 
   // 今年の目標更新関数
-  const updateYearlyGoal = async (newYearlyGoal: string) => {
+  const updateYearlyGoal = (newYearlyGoal: string) => {
     console.log('useElectronActivityTracker: 今年の目標更新:', newYearlyGoal);
     setYearlyGoal(newYearlyGoal);
-    
-    // データベースに保存
-    const userId = localStorage.getItem('userId');
-    if (userId && window.electronAPI?.dbUpdateUserYearlyGoal) {
-      try {
-        const result = await window.electronAPI.dbUpdateUserYearlyGoal(userId, newYearlyGoal);
-        if (result.success) {
-          console.log('年間目標をデータベースに保存しました');
-        } else {
-          console.error('年間目標の保存に失敗しました');
-        }
-      } catch (error) {
-        console.error('年間目標保存エラー:', error);
-      }
-    }
   };
 
   // 期間変更ハンドラー
@@ -293,7 +263,6 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
 
   const lastActivityTime = useRef(Date.now());
   const startTime = useRef(Date.now());
-  const workStartTimeRef = useRef<number | null>(null); // 作業開始時間を正確に管理
   const mousePositionRef = useRef({ x: 0, y: 0 });
   const intervalRef = useRef<NodeJS.Timeout>();
   const lastApp = useRef<string>('');
@@ -302,87 +271,78 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
   // 作業状態の制御
   const startWork = async () => {
     console.log('useElectronActivityTracker: startWork() 実行');
+    console.log('useElectronActivityTracker: Electron環境チェック - window.electronAPI:', !!window.electronAPI);
     
-    const now = Date.now();
+    // Electron環境で現在のアプリ名を取得
+    let currentAppName = document.title || 'ブラウザ';
+    let currentWindowTitle = document.title || 'ブラウザ';
     
-    // 初回の作業開始時のみworkStartTimeRefを設定
-    if (!workStartTimeRef.current) {
-      workStartTimeRef.current = now; // 作業開始時間を記録
+    if (window.electronAPI && typeof window.electronAPI!.getCurrentActivity === 'function') {
+      console.log('useElectronActivityTracker: Electron API が利用可能');
+      try {
+        const activityData = await window.electronAPI!.getCurrentActivity();
+        console.log('useElectronActivityTracker: getCurrentActivity 結果:', activityData);
+        if (activityData) {
+          currentAppName = activityData.appName;
+          currentWindowTitle = activityData.windowTitle;
+          console.log('Electron: 作業開始時のアプリ名:', activityData);
+        }
+      } catch (error) {
+        console.error('Electron: 作業開始時のアプリ名取得エラー:', error);
+      }
+    } else {
+      console.log('useElectronActivityTracker: Electron API が利用不可 - ブラウザ環境');
     }
     
-    // UIを即座に更新
+    // データベースに作業開始を記録
+    try {
+      if (window.electronAPI?.dbStartWork) {
+        await window.electronAPI.dbStartWork('current-user', {
+          appName: currentAppName,
+          windowTitle: currentWindowTitle,
+          startTime: Date.now()
+        });
+        console.log('useElectronActivityTracker: データベースに作業開始を記録');
+      }
+    } catch (error) {
+      console.error('useElectronActivityTracker: データベース記録エラー:', error);
+    }
+    
     setMetrics(prev => {
       console.log('useElectronActivityTracker: 作業開始 - 前の状態:', prev.workStatus);
       const newMetrics = {
         ...prev,
         isWorking: true,
-        workStartTime: now,
+        workStartTime: Date.now(),
         workStatus: 'working' as const,
-        currentApp: '作業中',
-        currentWindowTitle: '作業中'
+        currentApp: currentAppName,
+        currentWindowTitle: currentWindowTitle
       };
-      console.log('useElectronActivityTracker: 作業開始 - 新しい状態:', newMetrics.workStatus);
+      console.log('useElectronActivityTracker: 作業開始 - 新しい状態:', newMetrics.workStatus, 'currentApp:', newMetrics.currentApp);
+      console.log('useElectronActivityTracker: 作業開始 - 新しいmetrics全体:', newMetrics);
       return newMetrics;
     });
-    
-    // データベース操作をバックグラウンドで実行
-    setTimeout(async () => {
-      console.log('useElectronActivityTracker: Electron環境チェック - window.electronAPI:', !!window.electronAPI);
-      
-      // Electron環境で現在のアプリ名を取得
-      let currentAppName = document.title || 'ブラウザ';
-      let currentWindowTitle = document.title || 'ブラウザ';
-      
-      if (window.electronAPI && typeof window.electronAPI!.getCurrentActivity === 'function') {
-        console.log('useElectronActivityTracker: Electron API が利用可能');
-        try {
-          const activityData = await window.electronAPI!.getCurrentActivity();
-          console.log('useElectronActivityTracker: getCurrentActivity 結果:', activityData);
-          if (activityData) {
-            currentAppName = activityData.appName;
-            currentWindowTitle = activityData.windowTitle;
-            console.log('Electron: 作業開始時のアプリ名:', activityData);
-            
-            // アプリ名を更新
-            setMetrics(prev => ({
-              ...prev,
-              currentApp: currentAppName,
-              currentWindowTitle: currentWindowTitle
-            }));
-          }
-        } catch (error) {
-          console.error('Electron: 作業開始時のアプリ名取得エラー:', error);
-        }
-      } else {
-        console.log('useElectronActivityTracker: Electron API が利用不可 - ブラウザ環境');
-      }
-      
-      // データベースに作業開始を記録
-      try {
-        if (window.electronAPI?.dbStartWork) {
-          await window.electronAPI.dbStartWork('current-user', {
-            appName: currentAppName,
-            windowTitle: currentWindowTitle,
-            startTime: now
-          });
-          console.log('useElectronActivityTracker: データベースに作業開始を記録');
-        }
-      } catch (error) {
-        console.error('useElectronActivityTracker: データベース記録エラー:', error);
-      }
-    }, 0);
   };
 
   const startBreak = async () => {
     console.log('useElectronActivityTracker: startBreak() 実行');
     
-    // UIを即座に更新
+    // データベースに休憩開始を記録
+    try {
+      if (window.electronAPI?.dbStartBreak) {
+        await window.electronAPI.dbStartBreak('current-user');
+        console.log('useElectronActivityTracker: データベースに休憩開始を記録');
+      }
+    } catch (error) {
+      console.error('useElectronActivityTracker: データベース記録エラー:', error);
+    }
+    
     setMetrics(prev => {
       console.log('useElectronActivityTracker: 休憩開始 - 前の状態:', prev.workStatus);
       const newMetrics = {
         ...prev,
         isWorking: false,
-        workStartTime: null, // これはUI表示用なのでnullに設定
+        workStartTime: null,
         workStatus: 'break' as const,
         currentApp: '休憩中',
         currentWindowTitle: '休憩中'
@@ -390,30 +350,23 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
       console.log('useElectronActivityTracker: 休憩開始 - 新しい状態:', newMetrics.workStatus);
       return newMetrics;
     });
-    
     // 休憩開始時に集中度を0にリセット
     setCurrentFocusScore(0);
-    
-    // データベース操作をバックグラウンドで実行
-    setTimeout(async () => {
-      try {
-        if (window.electronAPI?.dbStartBreak) {
-          await window.electronAPI.dbStartBreak('current-user');
-          console.log('useElectronActivityTracker: データベースに休憩開始を記録');
-        }
-      } catch (error) {
-        console.error('useElectronActivityTracker: データベース記録エラー:', error);
-      }
-    }, 0);
   };
 
   const finishWork = async () => {
     console.log('useElectronActivityTracker: finishWork() 実行');
     
-    // 作業終了時のみ作業開始時間をリセット
-    workStartTimeRef.current = null;
+    // データベースに作業終了を記録
+    try {
+      if (window.electronAPI?.dbFinishWork) {
+        await window.electronAPI.dbFinishWork('current-user');
+        console.log('useElectronActivityTracker: データベースに作業終了を記録');
+      }
+    } catch (error) {
+      console.error('useElectronActivityTracker: データベース記録エラー:', error);
+    }
     
-    // UIを即座に更新
     setMetrics(prev => {
       console.log('useElectronActivityTracker: 作業終了 - 前の状態:', prev.workStatus);
       const newMetrics = {
@@ -427,21 +380,8 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
       console.log('useElectronActivityTracker: 作業終了 - 新しい状態:', newMetrics.workStatus);
       return newMetrics;
     });
-    
     // 作業終了時に集中度を0にリセット
     setCurrentFocusScore(0);
-    
-    // データベース操作をバックグラウンドで実行
-    setTimeout(async () => {
-      try {
-        if (window.electronAPI?.dbFinishWork) {
-          await window.electronAPI.dbFinishWork('current-user');
-          console.log('useElectronActivityTracker: データベースに作業終了を記録');
-        }
-      } catch (error) {
-        console.error('useElectronActivityTracker: データベース記録エラー:', error);
-      }
-    }, 0);
   };
 
   // 集中度計算（シンプルな計算）
@@ -468,11 +408,6 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
       
       // マウス移動の検出
       const handleMouseMove = (e: MouseEvent) => {
-        // 作業中でない場合はアクティビティを記録しない
-        if (metrics.workStatus !== 'working') {
-          return;
-        }
-        
         const deltaX = Math.abs(e.clientX - mousePositionRef.current.x);
         const deltaY = Math.abs(e.clientY - mousePositionRef.current.y);
         
@@ -490,11 +425,6 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
 
       // マウスクリックの検出
       const handleMouseClick = () => {
-        // 作業中でない場合はアクティビティを記録しない
-        if (metrics.workStatus !== 'working') {
-          return;
-        }
-        
         lastActivityTime.current = now;
         console.log('useElectronActivityTracker: マウスクリック検出');
         setMetrics(prev => ({
@@ -505,11 +435,6 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
 
       // キーストロークの検出
       const handleKeyPress = () => {
-        // 作業中でない場合はアクティビティを記録しない
-        if (metrics.workStatus !== 'working') {
-          return;
-        }
-        
         lastActivityTime.current = now;
         console.log('useElectronActivityTracker: キーストローク検出');
         setMetrics(prev => ({
@@ -686,6 +611,12 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
       // 日付変更をチェック
       checkAndResetDailyStats();
       
+      // 作業状態が休憩または終了の場合は集中度を0に設定
+      if (metrics.workStatus === 'break' || metrics.workStatus === 'finished') {
+        setCurrentFocusScore(0);
+        return;
+      }
+
       const now = Date.now();
       const timeSinceLastActivity = now - lastActivityTime.current;
       
@@ -710,46 +641,32 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
           currentApp: metrics.currentApp,
           workStatus: metrics.workStatus,
           timeSinceLastActivity: Math.round(timeSinceLastActivity / 1000),
-          focusScore: Math.round(newFocusScore),
-          activeTime: Math.round(metrics.activeTime * 60), // 分単位で表示
-          idleTime: Math.round(metrics.idleTime * 60), // 分単位で表示
-          workStartTime: workStartTimeRef.current ? new Date(workStartTimeRef.current).toLocaleTimeString() : '未開始'
+          focusScore: Math.round(newFocusScore)
         });
       }
       
-      // 作業状態に応じた処理
-      if (metrics.workStatus === 'break') {
-        // 休憩中は集中度を0に設定し、時間計測を停止
-        setCurrentFocusScore(0);
-        return;
-      } else if (metrics.workStatus === 'finished') {
-        // 作業終了時は集中度を0に設定し、時間計測を停止
-        setCurrentFocusScore(0);
-        return;
-      } else if (metrics.workStatus === 'working') {
-        // 作業中の場合のみ時間を計測
-        const isIdle = timeSinceLastActivity > 30000; // 30秒以上活動なし
-        
-        setMetrics(prev => {
-          const newMetrics = {
-            ...prev,
-            activeTime: prev.activeTime + (isIdle ? 0 : 1/60), // 1秒 = 1/60分（正確な計算）
-            idleTime: prev.idleTime + (isIdle ? 1/60 : 0) // 1秒 = 1/60分（正確な計算）
-          };
+      // アイドル時間の計算
+      const isIdle = timeSinceLastActivity > 30000; // 30秒以上活動なし
+      
+      setMetrics(prev => {
+        const newMetrics = {
+          ...prev,
+          activeTime: prev.activeTime + (isIdle ? 0 : 0.0167), // 1分 = 60秒なので、1秒 = 0.0167分
+          idleTime: prev.idleTime + (isIdle ? 0.0167 : 0) // 1分 = 60秒なので、1秒 = 0.0167分
+        };
 
-          // アプリ使用時間の更新（作業中の場合のみ）
-          if (prev.currentApp && prev.workStatus === 'working') {
-            setAppUsageMap(currentMap => {
-              const newMap = new Map(currentMap);
-              const currentTime = newMap.get(prev.currentApp) || 0;
-              newMap.set(prev.currentApp, currentTime + 1/60); // 1秒 = 1/60分（正確な計算）
-              return newMap;
-            });
-          }
+        // アプリ使用時間の更新（作業中の場合のみ）
+        if (prev.currentApp && prev.workStatus === 'working') {
+          setAppUsageMap(currentMap => {
+            const newMap = new Map(currentMap);
+            const currentTime = newMap.get(prev.currentApp) || 0;
+            newMap.set(prev.currentApp, currentTime + 0.0167); // 1分 = 60秒なので、1秒 = 0.0167分
+            return newMap;
+          });
+        }
 
-          return newMetrics;
-        });
-      }
+        return newMetrics;
+      });
 
       setCurrentFocusScore(newFocusScore);
 
@@ -845,7 +762,7 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
         clearInterval(intervalRef.current);
       }
     };
-  }, [focusSettings, metrics.workStatus]); // workStatusの変更を監視
+  }, [focusSettings]); // appUsageMapを依存関係から削除
 
   // 期間変更時にfocusHistoryを更新
   useEffect(() => {
@@ -908,24 +825,6 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
     
     // 初期の集中度履歴を日別データに設定
     setFocusHistory(generatePeriodData('daily'));
-    
-    // 目標を取得
-    const loadUserGoals = async () => {
-      const userId = localStorage.getItem('userId');
-      if (userId && window.electronAPI?.dbGetUserGoal) {
-        try {
-          const result = await window.electronAPI.dbGetUserGoal(userId);
-          if (result.success && result.goal) {
-            setTodayGoal(result.goal.todayGoal || '');
-            setYearlyGoal(result.goal.yearlyGoal || '');
-          }
-        } catch (error) {
-          console.error('目標取得エラー:', error);
-        }
-      }
-    };
-    
-    loadUserGoals();
   }, []);
 
   // TeamMemberオブジェクトの生成
@@ -933,13 +832,6 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
     console.log('useElectronActivityTracker: generateTeamMember() 呼び出し');
     // 日付変更をチェック
     checkAndResetDailyStats();
-    
-    // 作業開始時間からの実際の経過時間を計算
-    let actualWorkTime = 0;
-    if (workStartTimeRef.current) {
-      const now = Date.now();
-      actualWorkTime = (now - workStartTimeRef.current) / (1000 * 60); // 分単位
-    }
     
     // 時間を分単位で計算（activeTimeとidleTimeは既に分単位）
     const totalMinutes = Math.round((metrics.activeTime + metrics.idleTime) * 60);
@@ -956,12 +848,7 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
 
     // 作業状態に応じて集中度を調整（整数に丸める）
     let adjustedFocusScore = Math.round(currentFocusScore);
-    // 休憩中や作業終了時でも集中度を0にしない（一時停止状態を表現）
-    if (metrics.workStatus === 'break') {
-      // 休憩中は最後の集中度を保持（一時停止状態）
-      adjustedFocusScore = Math.round(currentFocusScore);
-    } else if (metrics.workStatus === 'finished') {
-      // 作業終了時は集中度を0にするが、作業時間は保持
+    if (metrics.workStatus === 'break' || metrics.workStatus === 'finished') {
       adjustedFocusScore = 0;
     }
 
@@ -988,7 +875,7 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
       avatar: getAvatarFromProfile(),
       lastUpdate: new Date(),
       dailyStats: {
-        totalHours: Math.max(actualWorkTime / 60, 0), // 実際の作業時間を時間に変換（最小値0に変更）
+        totalHours: Math.max(totalMinutes / 60, 0.1), // 分を時間に変換
         focusHours: Math.max(focusMinutes / 60, 0), // 分を時間に変換
         breakHours: Math.max(breakMinutes / 60, 0) // 分を時間に変換
       },
@@ -1003,14 +890,7 @@ export const useElectronActivityTracker = (userName: string, focusSettings?: Foc
 
     console.log('useElectronActivityTracker: generateTeamMember - workStatus:', teamMember.workStatus, 'metrics.workStatus:', metrics.workStatus);
 
-    console.log('useElectronActivityTracker: generateTeamMember - 時間計算詳細:', {
-      workStatus: teamMember.workStatus,
-      workStartTime: workStartTimeRef.current ? new Date(workStartTimeRef.current).toLocaleTimeString() : '未開始',
-      actualWorkTime: Math.round(actualWorkTime * 100) / 100, // 分単位（小数点2桁）
-      totalHours: Math.round((actualWorkTime / 60) * 100) / 100, // 時間単位（小数点2桁）
-      focusMinutes: focusMinutes,
-      breakMinutes: breakMinutes
-    });
+    console.log('useElectronActivityTracker: generateTeamMember - workStatus:', teamMember.workStatus, 'focusScore:', adjustedFocusScore, 'totalMinutes:', totalMinutes);
     return teamMember;
   };
 

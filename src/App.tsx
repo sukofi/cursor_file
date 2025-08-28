@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { LoginScreen } from './components/LoginScreen';
 import { Dashboard } from './components/Dashboard';
 import { DetailView } from './components/DetailView';
-import { StatusSelectionModal } from './components/StatusSelectionModal';
 import { TeamMember } from './types';
 import { useElectronActivityTracker } from './hooks/useElectronActivityTracker';
 
@@ -13,7 +12,6 @@ function App() {
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [isAdmin, setIsAdmin] = useState(false); // 管理者権限の状態
-  const [showStatusModal, setShowStatusModal] = useState(false); // ステータス選択モーダルの表示状態
 
   const [lastResetDate, setLastResetDate] = useState<string>('');
   const [settings, setSettings] = useState(() => {
@@ -184,23 +182,17 @@ function App() {
     console.log('App: 目標更新:', memberId, newGoal);
     
     try {
+      // データベースに保存
+      if (window.electronAPI?.dbUpdateUserGoal) {
+        await window.electronAPI.dbUpdateUserGoal(memberId, newGoal);
+        console.log('App: データベースに目標を保存:', memberId, newGoal);
+      }
+      
       // 現在のユーザーの場合は、useElectronActivityTrackerのupdateGoalを使用
       const currentUserId = localStorage.getItem('userId');
-      if (memberId === 'current-user' || memberId === currentUserId) {
+      if (memberId === currentUserId) {
         console.log('App: 現在のユーザーの目標を更新:', newGoal);
         updateGoal(newGoal);
-        
-        // データベースに保存（実際のuserIdを使用）
-        if (window.electronAPI?.dbUpdateUserGoal && currentUserId) {
-          await window.electronAPI.dbUpdateUserGoal(currentUserId, newGoal);
-          console.log('App: データベースに目標を保存:', currentUserId, newGoal);
-        }
-      } else {
-        // 他のユーザーの場合は、データベースに保存
-        if (window.electronAPI?.dbUpdateUserGoal) {
-          await window.electronAPI.dbUpdateUserGoal(memberId, newGoal);
-          console.log('App: データベースに目標を保存:', memberId, newGoal);
-        }
       }
       
       // ローカル状態を更新
@@ -234,23 +226,17 @@ function App() {
     console.log('App: 今年の目標更新:', memberId, newYearlyGoal);
     
     try {
+      // データベースに保存
+      if (window.electronAPI?.dbUpdateUserYearlyGoal) {
+        await window.electronAPI.dbUpdateUserYearlyGoal(memberId, newYearlyGoal);
+        console.log('App: データベースに今年の目標を保存:', memberId, newYearlyGoal);
+      }
+      
       // 現在のユーザーの場合は、useElectronActivityTrackerのupdateYearlyGoalを使用
       const currentUserId = localStorage.getItem('userId');
-      if (memberId === 'current-user' || memberId === currentUserId) {
+      if (memberId === currentUserId) {
         console.log('App: 現在のユーザーの今年の目標を更新:', newYearlyGoal);
         updateYearlyGoal(newYearlyGoal);
-        
-        // データベースに保存（実際のuserIdを使用）
-        if (window.electronAPI?.dbUpdateUserYearlyGoal && currentUserId) {
-          await window.electronAPI.dbUpdateUserYearlyGoal(currentUserId, newYearlyGoal);
-          console.log('App: データベースに今年の目標を保存:', currentUserId, newYearlyGoal);
-        }
-      } else {
-        // 他のユーザーの場合は、データベースに保存
-        if (window.electronAPI?.dbUpdateUserYearlyGoal) {
-          await window.electronAPI.dbUpdateUserYearlyGoal(memberId, newYearlyGoal);
-          console.log('App: データベースに今年の目標を保存:', memberId, newYearlyGoal);
-        }
       }
       
       // ローカル状態を更新
@@ -327,9 +313,6 @@ function App() {
       setProfile(defaultProfile);
       localStorage.setItem('userProfile', JSON.stringify(defaultProfile));
     }
-    
-    // ログイン後にステータス選択モーダルを表示
-    setShowStatusModal(true);
   };
 
   const handleMemberSelect = (member: TeamMember) => {
@@ -344,28 +327,6 @@ function App() {
     setIsLoggedIn(false);
     setCurrentUser(null);
     setSelectedMember(null);
-    setShowStatusModal(false);
-  };
-
-  // ステータス選択ハンドラー
-  const handleStatusSelect = async (status: 'working' | 'break' | 'finished') => {
-    console.log('App: ステータス選択:', status);
-    
-    // ステータスに応じて適切な関数を呼び出し
-    switch (status) {
-      case 'working':
-        await startWork();
-        break;
-      case 'break':
-        await startBreak();
-        break;
-      case 'finished':
-        await finishWork();
-        break;
-    }
-    
-    // モーダルを閉じる
-    setShowStatusModal(false);
   };
 
   const handleSettingsChange = (newSettings: any) => {
@@ -524,29 +485,20 @@ function App() {
   console.log('App: Dashboardに渡すtrackedUser全体:', trackedUser);
   
   return (
-    <>
-      <Dashboard 
-        teamMembers={teamMembers}
-        onMemberSelect={handleMemberSelect}
-        onGoalUpdate={handleGoalUpdate}
-        onYearlyGoalUpdate={handleYearlyGoalUpdate}
-        isAdmin={isAdmin}
-        onDeleteMember={handleDeleteMember}
-        onCleanDummyData={handleCleanDummyData}
-        onClearAllData={handleClearAllData}
-        trackedUser={trackedUser}
-        onWorkStart={startWork}
-        onWorkBreak={startBreak}
-        onWorkFinish={finishWork}
-      />
-      
-      {/* ステータス選択モーダル */}
-      <StatusSelectionModal
-        isOpen={showStatusModal}
-        onClose={() => setShowStatusModal(false)}
-        onStatusSelect={handleStatusSelect}
-      />
-    </>
+    <Dashboard 
+      teamMembers={teamMembers}
+      onMemberSelect={handleMemberSelect}
+      onGoalUpdate={handleGoalUpdate}
+      onYearlyGoalUpdate={handleYearlyGoalUpdate}
+      isAdmin={isAdmin}
+      onDeleteMember={handleDeleteMember}
+      onCleanDummyData={handleCleanDummyData}
+      onClearAllData={handleClearAllData}
+      trackedUser={trackedUser}
+      onWorkStart={startWork}
+      onWorkBreak={startBreak}
+      onWorkFinish={finishWork}
+    />
   );
 }
 
