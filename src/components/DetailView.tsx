@@ -194,10 +194,6 @@ export const DetailView: React.FC<DetailViewProps> = ({
 
           {/* 集中度グラフ */}
           <div className="bg-gray-700/50 rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-4">
-              <TrendingUp className="w-5 h-5 text-green-400" />
-              <h4 className="text-gray-300 text-lg">集中度の推移</h4>
-            </div>
             <FocusChart 
               data={member.focusHistory} 
               period={currentPeriod}
