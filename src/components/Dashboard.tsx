@@ -18,8 +18,6 @@ interface DashboardProps {
   onYearlyGoalUpdate: (memberId: string, newYearlyGoal: string) => void;
   isAdmin: boolean;
   onDeleteMember: (memberId: string) => void;
-  onCleanDummyData: () => void;
-  onClearAllData: () => void;
   trackedUser: TeamMember;
   onWorkStart?: () => void;
   onWorkBreak?: () => void;
@@ -33,8 +31,6 @@ export const Dashboard: React.FC<DashboardProps> = ({
   onYearlyGoalUpdate,
   isAdmin,
   onDeleteMember,
-  onCleanDummyData,
-  onClearAllData,
   trackedUser,
   onWorkStart,
   onWorkBreak,
@@ -295,17 +291,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
             </h2>
             {/* 管理者のみ追加ボタンを表示 */}
             {isAdmin && (
-              <div className="flex gap-2">
-                <button onClick={() => setIsAddMemberOpen(true)} className="p-2 bg-purple-500/20 backdrop-blur-sm border border-purple-500/30 rounded-lg text-purple-400 hover:bg-purple-500/30 transition-all duration-200" title="メンバーを追加">
-                  <Plus className="w-4 h-4" />
-                </button>
-                <button onClick={onCleanDummyData} className="p-2 bg-red-500/20 backdrop-blur-sm border border-red-500/30 rounded-lg text-red-400 hover:bg-red-500/30 transition-all duration-200" title="ダミーデータ削除">
-                  <Trash2 className="w-4 h-4" />
-                </button>
-                <button onClick={onClearAllData} className="p-2 bg-orange-500/20 backdrop-blur-sm border border-orange-500/30 rounded-lg text-orange-400 hover:bg-orange-500/30 transition-all duration-200" title="全データ削除">
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
+              <button onClick={() => setIsAddMemberOpen(true)} className="p-2 bg-purple-500/20 backdrop-blur-sm border border-purple-500/30 rounded-lg text-purple-400 hover:bg-purple-500/30 transition-all duration-200" title="メンバーを追加">
+                <Plus className="w-4 h-4" />
+              </button>
             )}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">

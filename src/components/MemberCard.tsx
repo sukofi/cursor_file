@@ -227,6 +227,20 @@ export const MemberCard: React.FC<MemberCardProps> = ({
         </div>
         <p className="text-white text-sm line-clamp-2">{member.todayGoal || '目標が設定されていません'}</p>
       </div>
+
+      {/* 管理者のみ表示される削除ボタン */}
+      {isAdmin && member.id !== 'current-user' && onDeleteMember && (
+        <div className="mt-4 pt-3 border-t border-gray-600/30">
+          <button
+            onClick={handleDeleteClick}
+            className="w-full px-3 py-2 bg-red-500/10 backdrop-blur-sm border border-red-500/20 rounded-lg text-red-400 hover:bg-red-500/20 transition-all duration-200 text-sm opacity-60 hover:opacity-100"
+            title="メンバーを削除"
+          >
+            <Trash2 className="w-4 h-4 inline mr-2" />
+            削除
+          </button>
+        </div>
+      )}
     </div>
   );
 };
