@@ -39,6 +39,15 @@ export const FocusChart: React.FC<FocusChartProps> = ({
   const maxScore = Math.max(...chartData.map(d => d.score));
   const minScore = Math.min(...chartData.map(d => d.score));
   
+  // 平均集中度を計算
+  const averageScore = chartData.length > 0 
+    ? chartData.reduce((sum, point) => sum + point.score, 0) / chartData.length 
+    : 0;
+  
+  // 総作業時間を計算（分単位）
+  const totalFocusHours = chartData.reduce((sum, point) => sum + (point.focusHours || 0), 0);
+  const totalFocusMinutes = totalFocusHours * 60;
+  
   const getPointColor = (score: number) => {
     if (score >= 80) return '#10B981';
     if (score >= 50) return '#F59E0B';
@@ -87,103 +96,57 @@ export const FocusChart: React.FC<FocusChartProps> = ({
         </div>
       )}
 
-      {/* グラフエリア */}
-      <div className="h-64 relative">
-      <svg className="w-full h-full">
-        {/* グリッドライン */}
-        {[20, 40, 60, 80].map((value) => (
-          <g key={value}>
-            <line
-              x1="0"
-              y1={`${100 - value}%`}
-              x2="100%"
-              y2={`${100 - value}%`}
-              stroke="rgba(255,255,255,0.1)"
-              strokeDasharray="2,2"
-            />
-            <text
-              x="10"
-              y={`${100 - value}%`}
-              dy="-5"
-              fill="rgba(255,255,255,0.5)"
-              fontSize="12"
-            >
-              {value}%
-            </text>
-          </g>
-        ))}
-        
-        {/* バーグラフ */}
-        {chartData.map((point, index) => {
-          const barWidth = 100 / chartData.length * 0.8; // バーの幅（80%）
-          const barSpacing = 100 / chartData.length * 0.2; // バー間のスペース（20%）
-          const barX = (index / chartData.length) * 100 + barSpacing / 2;
-          const barHeight = point.score;
-          const barY = 100 - barHeight;
-          
-          return (
-            <g key={index}>
-              {/* バーの背景 */}
-              <rect
-                x={`${barX}%`}
-                y="0%"
-                width={`${barWidth}%`}
-                height="100%"
-                fill="rgba(255,255,255,0.05)"
-                rx="2"
+      {/* 円グラフエリア */}
+      <div className="flex justify-center items-center h-64">
+        <div className="relative">
+          {/* 円グラフ */}
+          <div className="relative w-48 h-48">
+            <svg className="w-full h-full transform -rotate-90">
+              {/* 背景円 */}
+              <circle
+                cx="96"
+                cy="96"
+                r="80"
+                fill="none"
+                stroke="rgba(255, 255, 255, 0.1)"
+                strokeWidth="16"
               />
-              {/* メインバー */}
-              <rect
-                x={`${barX}%`}
-                y={`${barY}%`}
-                width={`${barWidth}%`}
-                height={`${barHeight}%`}
-                fill={getPointColor(point.score)}
-                rx="2"
-                className="drop-shadow-lg transition-all duration-300"
+              {/* 進捗円 */}
+              <circle
+                cx="96"
+                cy="96"
+                r="80"
+                fill="none"
+                stroke={getPointColor(averageScore)}
+                strokeWidth="16"
+                strokeDasharray={`${(averageScore / 100) * 502.65} 502.65`}
+                strokeLinecap="round"
                 style={{
-                  filter: `drop-shadow(0 0 8px ${getPointColor(point.score)})`,
+                  filter: `drop-shadow(0 0 8px ${getPointColor(averageScore)})`,
+                  transition: 'stroke-dasharray 0.8s ease-in-out',
                 }}
               />
-              {/* バー内に集中度を表示 */}
-              <text
-                x={`${barX + barWidth / 2}%`}
-                y={`${barY + barHeight / 2}%`}
-                textAnchor="middle"
-                fill="white"
-                fontSize="10"
-                fontWeight="bold"
-                className="drop-shadow-lg"
-              >
-                {Math.round(point.score)}%
-              </text>
-              {/* バー枠外の上に作業時間を表示 */}
-              {point.focusHours !== undefined && (
-                <text
-                  x={`${barX + barWidth / 2}%`}
-                  y={`${barY - 5}%`}
-                  textAnchor="middle"
-                  fill="rgba(255,255,255,0.9)"
-                  fontSize="9"
-                  fontWeight="500"
-                  className="drop-shadow-lg"
-                >
-                  {point.focusHours.toFixed(1)}h
-                </text>
-              )}
-            </g>
-          );
-        })}
-      </svg>
-      
-      {/* X軸ラベル */}
-      <div className="flex justify-between mt-2 px-2">
-        {chartData.map((point, index) => (
-          <span key={index} className="text-gray-400 text-xs text-center">
-            {point.time}
-          </span>
-        ))}
-      </div>
+            </svg>
+            
+            {/* 中央の数値 */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <p className="text-3xl font-bold text-white drop-shadow-lg">
+                {Math.round(averageScore)}%
+              </p>
+              <p className="text-gray-300 text-sm mt-1">平均集中度</p>
+            </div>
+          </div>
+          
+          {/* 作業時間表示（円グラフの上） */}
+          {totalFocusHours > 0 && (
+            <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 text-center">
+              <p className="text-2xl font-bold text-white drop-shadow-lg">
+                {Math.round(totalFocusMinutes)}分
+              </p>
+              <p className="text-gray-300 text-xs">総作業時間</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
