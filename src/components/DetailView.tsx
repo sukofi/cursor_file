@@ -60,20 +60,22 @@ export const DetailView: React.FC<DetailViewProps> = ({
   });
 
   return (
-    <div className={`${isOpen ? 'block' : 'hidden'} fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4`}>
-      <div className="bg-gray-800 rounded-xl border border-white/20 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div className={`${isOpen ? 'block' : 'hidden'} ${member.id === 'current-user' ? 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4' : 'w-full'}`}>
+      <div className={`bg-gray-800 rounded-xl border border-white/20 ${member.id === 'current-user' ? 'max-w-2xl w-full max-h-[90vh] overflow-y-auto' : 'w-full'}`}>
         {/* ヘッダー */}
         <div className="flex items-center justify-between p-6 border-b border-white/10">
           <h2 className="text-xl font-bold text-white flex items-center gap-2">
             <User className="w-6 h-6 text-blue-400" />
             {member.name}の詳細情報
           </h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-white transition-colors"
-          >
-            <X className="w-6 h-6" />
-          </button>
+          {member.id === 'current-user' && (
+            <button
+              onClick={onClose}
+              className="text-gray-400 hover:text-white transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+          )}
         </div>
 
         {/* コンテンツ */}
