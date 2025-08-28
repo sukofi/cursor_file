@@ -184,13 +184,17 @@ function App() {
     try {
       // データベースに保存
       if (window.electronAPI?.dbUpdateUserGoal) {
-        await window.electronAPI.dbUpdateUserGoal(memberId, newGoal);
-        console.log('App: データベースに目標を保存:', memberId, newGoal);
+        // current-userの場合は実際のuserIdを使用
+        const actualUserId = memberId === 'current-user' ? localStorage.getItem('userId') : memberId;
+        if (actualUserId) {
+          await window.electronAPI.dbUpdateUserGoal(actualUserId, newGoal);
+          console.log('App: データベースに目標を保存:', actualUserId, newGoal);
+        }
       }
       
       // 現在のユーザーの場合は、useElectronActivityTrackerのupdateGoalを使用
       const currentUserId = localStorage.getItem('userId');
-      if (memberId === currentUserId) {
+      if (memberId === 'current-user' || memberId === currentUserId) {
         console.log('App: 現在のユーザーの目標を更新:', newGoal);
         updateGoal(newGoal);
       }
@@ -228,13 +232,17 @@ function App() {
     try {
       // データベースに保存
       if (window.electronAPI?.dbUpdateUserYearlyGoal) {
-        await window.electronAPI.dbUpdateUserYearlyGoal(memberId, newYearlyGoal);
-        console.log('App: データベースに今年の目標を保存:', memberId, newYearlyGoal);
+        // current-userの場合は実際のuserIdを使用
+        const actualUserId = memberId === 'current-user' ? localStorage.getItem('userId') : memberId;
+        if (actualUserId) {
+          await window.electronAPI.dbUpdateUserYearlyGoal(actualUserId, newYearlyGoal);
+          console.log('App: データベースに今年の目標を保存:', actualUserId, newYearlyGoal);
+        }
       }
       
       // 現在のユーザーの場合は、useElectronActivityTrackerのupdateYearlyGoalを使用
       const currentUserId = localStorage.getItem('userId');
-      if (memberId === currentUserId) {
+      if (memberId === 'current-user' || memberId === currentUserId) {
         console.log('App: 現在のユーザーの今年の目標を更新:', newYearlyGoal);
         updateYearlyGoal(newYearlyGoal);
       }
