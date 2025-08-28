@@ -115,7 +115,7 @@ export const MemberCard: React.FC<MemberCardProps> = ({
       {/* 休憩時のポーズオーバーレイ */}
       {isPaused && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-          <div className="bg-yellow-500/90 rounded-full p-4 animate-pulse shadow-lg">
+          <div className="bg-yellow-500/90 rounded-full p-4 shadow-lg">
             <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
             </svg>
