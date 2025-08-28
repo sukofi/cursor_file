@@ -37,11 +37,12 @@ export const MemberCard: React.FC<MemberCardProps> = ({
       };
     } else if (workStatus === 'finished') {
       return {
-        borderColor: 'rgba(156, 163, 175, 0.6)',
-        boxShadow: '0 0 20px rgba(156, 163, 175, 0.6)',
-        hoverBoxShadow: '0 0 30px rgba(156, 163, 175, 0.8)',
-        textColor: 'text-gray-400',
-        isPaused: false
+        borderColor: 'rgba(239, 68, 68, 0.6)',
+        boxShadow: '0 0 20px rgba(239, 68, 68, 0.6)',
+        hoverBoxShadow: '0 0 30px rgba(239, 68, 68, 0.8)',
+        textColor: 'text-red-400',
+        isPaused: false,
+        isFinished: true
       };
     }
     
@@ -52,7 +53,8 @@ export const MemberCard: React.FC<MemberCardProps> = ({
         boxShadow: '0 0 20px rgba(34, 211, 238, 0.6)',
         hoverBoxShadow: '0 0 30px rgba(34, 211, 238, 0.8)',
         textColor: 'text-cyan-400',
-        isPaused: false
+        isPaused: false,
+        isFinished: false
       };
     } else if (focusScore >= 60) {
       return {
@@ -60,7 +62,8 @@ export const MemberCard: React.FC<MemberCardProps> = ({
         boxShadow: '0 0 20px rgba(74, 222, 128, 0.6)',
         hoverBoxShadow: '0 0 30px rgba(74, 222, 128, 0.8)',
         textColor: 'text-green-400',
-        isPaused: false
+        isPaused: false,
+        isFinished: false
       };
     } else if (focusScore >= 40) {
       return {
@@ -68,7 +71,8 @@ export const MemberCard: React.FC<MemberCardProps> = ({
         boxShadow: '0 0 20px rgba(250, 204, 21, 0.6)',
         hoverBoxShadow: '0 0 30px rgba(250, 204, 21, 0.8)',
         textColor: 'text-yellow-400',
-        isPaused: false
+        isPaused: false,
+        isFinished: false
       };
     } else if (focusScore >= 20) {
       return {
@@ -76,7 +80,8 @@ export const MemberCard: React.FC<MemberCardProps> = ({
         boxShadow: '0 0 20px rgba(250, 204, 21, 0.6)',
         hoverBoxShadow: '0 0 30px rgba(250, 204, 21, 0.8)',
         textColor: 'text-yellow-400',
-        isPaused: false
+        isPaused: false,
+        isFinished: false
       };
     } else {
       return {
@@ -84,7 +89,8 @@ export const MemberCard: React.FC<MemberCardProps> = ({
         boxShadow: '0 0 20px rgba(156, 163, 175, 0.6)',
         hoverBoxShadow: '0 0 30px rgba(156, 163, 175, 0.8)',
         textColor: 'text-gray-400',
-        isPaused: false
+        isPaused: false,
+        isFinished: false
       };
     }
   };
@@ -121,6 +127,17 @@ export const MemberCard: React.FC<MemberCardProps> = ({
           <div className="bg-yellow-500/80 backdrop-blur-sm rounded-full p-4">
             <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+          </div>
+        </div>
+      )}
+      
+      {/* 作業終了時の完了オーバーレイ */}
+      {neonStyle.isFinished && (
+        <div className="absolute inset-0 bg-red-500/10 backdrop-blur-sm rounded-xl flex items-center justify-center pointer-events-none">
+          <div className="bg-red-500/80 backdrop-blur-sm rounded-full p-4">
+            <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
           </div>
         </div>
@@ -206,7 +223,9 @@ export const MemberCard: React.FC<MemberCardProps> = ({
           </div>
         <div className="text-center relative">
           <p className="text-2xl font-bold text-white">{Math.round(member.dailyStats.totalHours * 60)}分</p>
-          <p className="text-gray-400 text-xs">作業時間</p>
+          <p className="text-gray-400 text-xs">
+            {neonStyle.isFinished ? '本日の作業時間' : '作業時間'}
+          </p>
         </div>
       </div>
 
