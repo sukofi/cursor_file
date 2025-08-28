@@ -215,4 +215,4 @@ export const MemberCard: React.FC<MemberCardProps> = ({
 
     </div>
   );
-};
+};詳細ｚ詳細ｊ
