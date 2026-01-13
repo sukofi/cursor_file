@@ -23,14 +23,9 @@
 - [20260112_アルファベット時価総額4兆ドル到達、AI注力を好感](https://jp.reuters.com/markets/world-indices/K5L33ADBY5O55PCSM7PI5DT44Q-2026-01-12/)
 
 - [20260112_アップル、次世代AIにグーグル「ジェミニ」採用](https://jp.reuters.com/markets/global-markets/7CJ3A4NDLZNMPOWEQBZ6WLRBMI-2026-01-12/)
-
 - [20260112_「AI-Readyデータ」に5割以上の企業が着手](https://research.impress.co.jp/topics/list/enterprise-it/725)
-
 - [20260112_CES 2026: AIバブル懸念をよそに実用化が加速](https://edition.cnn.com/2026/01/10/tech/ces-ai-tech-las-vegas)
 - [20260113_アップル、次世代AIにグーグル「ジェミニ」採用 複数年契約締結](https://jp.reuters.com/markets/global-markets/7CJ3A4NDLZNMPOWEQBZ6WLRBMI-2026-01-12/)
-
 - [20260113_「AI-Readyデータ」に5割以上の企業が着手](https://prtimes.jp/main/html/rd/p/000007089.000005875.html)
-
 - [20260113_Agentic AI（エージェント型AI）が製造業のワークフローを変革](https://amiko.consulting/2026%E5%B9%B41%E6%9C%88%E3%81%AEai%E9%9D%A9%E5%91%BD%EF%BC%9A%E8%A3%BD%E9%80%A0%E6%A5%AD%E3%81%AE%E6%9C%AA%E6%9D%A5%E3%82%92%E5%A4%89%E3%81%88%E3%82%8B7%E3%81%A4%E3%81%AE%E4%B8%BB%E8%A6%81%E3%83%88/)
-
 - [20260113_MITテクノロジーレビュー：2026年のAI 5大予測](https://www.technologyreview.jp/s/375307/whats-next-for-ai-in-2026/)
