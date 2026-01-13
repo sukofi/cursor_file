@@ -8,24 +8,39 @@ echo "監視間隔: ${INTERVAL}秒"
 echo "停止するには Ctrl+C を押してください"
 
 while true; do
-    # 1. まずGitHubから最新を取得 (Pull)
-    # コンフリクトを避けるため、作業ディレクトリがクリーンな場合のみプルを試みるのが安全だが、
-    # ここでは簡易的に毎回プルを試み、失敗したらログを出す設定にする。
-    # --rebase オプションをつけることで、ローカルのコミットがある場合でも履歴をきれいに保つ
+    # ==========================================
+    # 1. GitHub上の更新を確認して同期 (Pull)
+    # ==========================================
     
-    echo "--- 同期チェック: $(date "+%H:%M:%S") ---"
+    # リモートの情報を更新
+    git fetch origin > /dev/null 2>&1
     
-    # リモートの更新を確認してプル
-    git pull --rebase origin main > /dev/null 2>&1
-    if [ $? -eq 0 ]; then
-        : # プル成功（または更新なし）- ログ過多を防ぐため成功時は静かにする
-    else
-        echo "⚠️  プルに失敗しました。競合が発生しているか、ネットワークエラーの可能性があります。"
+    # リモート追跡ブランチが存在するか確認
+    if git rev-parse @{u} > /dev/null 2>&1; then
+        # リモート(origin)がローカル(HEAD)より進んでいるか確認
+        BEHIND_COUNT=$(git rev-list HEAD..@{u} --count)
+        
+        if [ "$BEHIND_COUNT" -gt 0 ]; then
+            echo "----------------------------------------"
+            echo "GitHub上の更新を検知しました（${BEHIND_COUNT}件のコミット）。"
+            echo "同期（Pull）を開始します..."
+            
+            if git pull; then
+                echo "✅ 同期完了！ローカルを更新しました。"
+            else
+                echo "⚠️ 同期に失敗しました。コンフリクトが発生している可能性があります。"
+            fi
+        fi
     fi
 
-    # 2. ローカルの変更があるか確認してPush
+    # ==========================================
+    # 2. ローカルの変更を確認して送信 (Push)
+    # ==========================================
+    
+    # 変更があるか確認（未追跡ファイルも含める）
     if [[ -n $(git status -s) ]]; then
-        echo "📝 変更を検知しました。プッシュ処理を開始します..."
+        echo "----------------------------------------"
+        echo "ローカルの変更を検知しました。プッシュ処理を開始します..."
         
         # 現在時刻を取得
         TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
@@ -35,15 +50,18 @@ while true; do
         
         # コミット
         if git commit -m "Auto update: $TIMESTAMP"; then
+            # プッシュ前に再度Pullして最新状態を確認（コンフリクト回避）
+            git pull --rebase > /dev/null 2>&1
+            
             # プッシュ
             echo "GitHubへプッシュ中..."
-            if git push origin main; then
+            if git push; then
                 echo "✅ [$TIMESTAMP] プッシュ成功！"
             else
                 echo "❌ [$TIMESTAMP] プッシュに失敗しました。"
             fi
         else
-            echo "コミットに失敗しました（変更がない可能性があります）"
+            echo "コミットに失敗しました。"
         fi
     fi
     
