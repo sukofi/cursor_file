@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "26795daf14d937cc",
+        "id": "e36e683f5e79a45c",
         "type": "tabs",
         "children": [
           {
-            "id": "f0e81164781aca3c",
+            "id": "16b1d137a6dadcb7",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -179,7 +179,7 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "f0e81164781aca3c",
+  "active": "16b1d137a6dadcb7",
   "lastOpenFiles": [
     "2.obsidian_main/AIニュース.md"
   ]
