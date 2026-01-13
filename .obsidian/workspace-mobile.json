@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "01.memo/あいうえお.md",
+                "file": "01.AIニュース.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "あいうえお"
+              "title": "01.AIニュース"
             }
           }
         ],
@@ -196,9 +196,9 @@
   },
   "active": "aa48958b618b7542",
   "lastOpenFiles": [
+    "01.memo/あいうえお.md",
     "01.memo/てすと.md",
     "無題のフォルダ",
-    "01.memo/あいうえお.md",
     "01.AIニュース.md",
     "2.obsidian_main/memo/たたた.md",
     "/2.obsidian_main/memo/あいうえお.md",
