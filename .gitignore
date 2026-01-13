@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Dependencies
 node_modules/
 npm-debug.log*
@@ -29,6 +28,12 @@ Thumbs.db
 
 # Logs
 *.log
+auto_push.log
+
+# Obsidian
+.obsidian/
+.trash/
+*.obsidian
 
 # Runtime data
 pids
@@ -114,14 +119,3 @@ rpro.log
 stable-diffusion-webui/
 tenpo_ido_keido.py
 winetricks
-=======
-# OS / editor junk
-.DS_Store
-Thumbs.db
-
-# Cursor / IDE
-.cursor
-.vscode
-
-auto_push.log
->>>>>>> 2705ddc (Sync cursor_file-main content)
