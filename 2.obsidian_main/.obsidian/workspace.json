@@ -78,8 +78,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 200
   },
   "right": {
     "id": "bf8aefb2c52e7e6a",
@@ -184,8 +183,9 @@
       "bases:Create new base": false
     }
   },
-  "active": "1546ace1ff86b65c",
+  "active": "5dfc7f62a62f8c97",
   "lastOpenFiles": [
+    "無題のフォルダ",
     "無題のファイル.md",
     "Welcome.md",
     "AIニュース"
