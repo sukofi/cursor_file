@@ -78,7 +78,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 200,
+    "collapsed": true
   },
   "right": {
     "id": "bf8aefb2c52e7e6a",
@@ -94,7 +95,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "無題のファイル.md",
+                "file": "AIニュース.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +105,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "無題のファイルへのバックリンク"
+              "title": "AIニュースへのバックリンク"
             }
           },
           {
@@ -183,7 +184,7 @@
       "bases:Create new base": false
     }
   },
-  "active": "5dfc7f62a62f8c97",
+  "active": "1546ace1ff86b65c",
   "lastOpenFiles": [
     "無題のファイル.md",
     "Welcome.md",
