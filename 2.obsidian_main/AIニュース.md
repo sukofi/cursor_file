@@ -18,5 +18,5 @@
 - [20260113_Agentic AI（エージェント型AI）が製造業のワークフローを変革](https://amiko.consulting/2026%E5%B9%B41%E6%9C%88%E3%81%AEai%E9%9D%A9%E5%91%BD%EF%BC%9A%E8%A3%BD%E9%80%A0%E6%A5%AD%E3%81%AE%E6%9C%AA%E6%9D%A5%E3%82%92%E5%A4%89%E3%81%88%E3%82%8B7%E3%81%A4%E3%81%AE%E4%B8%BB%E8%A6%81%E3%83%88/)
 - [20260113_MITテクノロジーレビュー：2026年のAI 5大予測](https://www.technologyreview.jp/s/375307/whats-next-for-ai-in-2026/)
 
-
+たちツテと
 かきくけこ
