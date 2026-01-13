@@ -1,9 +1,0 @@
-# OS / editor junk
-.DS_Store
-Thumbs.db
-
-# Cursor / IDE
-.cursor
-.vscode
-
-auto_push.log
