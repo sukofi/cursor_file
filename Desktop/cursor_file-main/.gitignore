@@ -1,9 +1,6 @@
-# OS / editor junk
 .DS_Store
-Thumbs.db
-
-# Cursor / IDE
-.cursor
-.vscode
-
-auto_push.log
+.obsidian/workspace
+.obsidian/workspace.json
+.obsidian/cache
+node_modules/
+*.log
