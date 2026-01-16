@@ -93,10 +93,10 @@
         }
 
         /* Fixed positions for clarity - Adjusted for visibility */
-        .pos-user { left: 130px; top: 360px; }
-        .pos-dns { left: 480px; top: 360px; }
-        .pos-studio { left: 800px; top: 180px; }
-        .pos-wp { left: 800px; top: 480px; }
+        .pos-user { left: 80px; top: 320px; }
+        .pos-dns { left: 400px; top: 320px; }
+        .pos-studio { left: 740px; top: 180px; }
+        .pos-wp { left: 740px; top: 460px; }
     </style>
 </head>
 <body>
@@ -125,11 +125,11 @@
 </marker>
 </defs>
 <!-- User to DNS -->
-<path d="M 330,360 L 470,360" marker-end="url(#arrow-slate)" stroke="#cbd5e1" stroke-width="4"></path>
+<path d="M 280,320 L 390,320" marker-end="url(#arrow-slate)" stroke="#cbd5e1" stroke-width="4"></path>
 <!-- DNS to STUDIO -->
-<path class="path-animated" d="M 710,360 C 750,360 750,180 790,180" fill="none" marker-end="url(#arrow-blue)" stroke="#3b82f6" stroke-opacity="0.4" stroke-width="4"></path>
+<path class="path-animated" d="M 630,320 C 670,320 670,180 730,180" fill="none" marker-end="url(#arrow-blue)" stroke="#3b82f6" stroke-opacity="0.4" stroke-width="4"></path>
 <!-- DNS to WordPress: Adjusted path to match top:480px -->
-<path class="path-animated" d="M 710,360 C 750,360 750,480 790,480" fill="none" marker-end="url(#arrow-green)" stroke="#22c55e" stroke-opacity="0.4" stroke-width="4"></path>
+<path class="path-animated" d="M 630,320 C 670,320 670,460 730,460" fill="none" marker-end="url(#arrow-green)" stroke="#22c55e" stroke-opacity="0.4" stroke-width="4"></path>
 </svg>
 <!-- STEP 1: USER -->
 <div class="absolute pos-user -translate-y-1/2 z-10 flex flex-col items-center">
@@ -170,11 +170,11 @@
 </div>
 </div>
 <!-- Path Labels -->
-<div class="absolute left-[730px] top-[260px] bg-blue-600 text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-xl z-20">
+<div class="absolute left-[650px] top-[240px] bg-blue-600 text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-xl z-20">
             メインサイトへ誘導
         </div>
 <!-- Adjusted label position for WordPress path -->
-<div class="absolute left-[730px] top-[410px] bg-green-600 text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-xl z-20">
+<div class="absolute left-[650px] top-[390px] bg-green-600 text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-xl z-20">
             ブログメディアへ誘導
         </div>
 <!-- STEP 3a: STUDIO -->
