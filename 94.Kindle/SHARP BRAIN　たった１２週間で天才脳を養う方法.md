@@ -7,6 +7,11 @@ kindle-sync:
   lastAnnotatedDate: Invalid date
   bookImageUrl: 'https://m.media-amazon.com/images/I/81ub0zdCSJL._SY160.jpg'
   highlightsCount: 2
+tags:
+  - Kindle
+  - 読書
+  - 脳科学
+  - 健康
 ---
 # SHARP BRAIN　たった１２週間で天才脳を養う方法
 ## Metadata

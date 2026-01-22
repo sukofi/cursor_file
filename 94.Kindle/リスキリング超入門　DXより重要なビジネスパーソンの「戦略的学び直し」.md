@@ -7,6 +7,11 @@ kindle-sync:
   lastAnnotatedDate: Invalid date
   bookImageUrl: 'https://m.media-amazon.com/images/I/71td6VwpCPL._SY160.jpg'
   highlightsCount: 3
+tags:
+  - Kindle
+  - 読書
+  - リスキリング
+  - DX
 ---
 # リスキリング超入門　DXより重要なビジネスパーソンの「戦略的学び直し」
 ## Metadata

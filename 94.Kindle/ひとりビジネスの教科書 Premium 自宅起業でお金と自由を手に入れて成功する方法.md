@@ -7,6 +7,11 @@ kindle-sync:
   lastAnnotatedDate: Invalid date
   bookImageUrl: 'https://m.media-amazon.com/images/I/71ym6aLAJ0L._SY160.jpg'
   highlightsCount: 7
+tags:
+  - Kindle
+  - 読書
+  - 起業
+  - ひとりビジネス
 ---
 # ひとりビジネスの教科書 Premium 自宅起業でお金と自由を手に入れて成功する方法
 ## Metadata
