@@ -20,7 +20,8 @@ while true; do
 
     # 2. リモートからの変更を取り込み (Pull)
     # ローカルはコミット済みなので rebase しやすい
-    PULL_OUTPUT=$(git pull $REMOTE $BRANCH --rebase 2>&1)
+    # --autostash で、カレントディレクトリ外の変更（unstaged）を一時退避してpullする
+    PULL_OUTPUT=$(git pull $REMOTE $BRANCH --rebase --autostash 2>&1)
     PULL_EXIT_CODE=$?
     
     if [[ $PULL_EXIT_CODE -ne 0 ]]; then
