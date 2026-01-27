@@ -28,6 +28,12 @@ Thumbs.db
 
 # Logs
 *.log
+auto_push.log
+
+# Obsidian
+.obsidian/
+.trash/
+*.obsidian
 
 # Runtime data
 pids
@@ -113,3 +119,9 @@ rpro.log
 stable-diffusion-webui/
 tenpo_ido_keido.py
 winetricks
+
+
+
+
+# Ignore Smart Environment folder
+.smart-env
