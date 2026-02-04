@@ -61,5 +61,26 @@
     "date": "2026-02-04",
     "file": "/home/ubuntu/cursor_file/100.論文/社会心理学/2026-02-04 Live or Lie_ Action-Aware Capsule Multiple Instance Learning for Risk Assessment in Live Streaming Platforms.pdf",
     "language": "ja-related"
+  },
+  "b523421f65f49f6b39aa2a4d9cdd7b44": {
+    "title": "UnHype: CLIP-Guided Hypernetworks for Dynamic LoRA Unlearning",
+    "date": "2026-02-04",
+    "file": "/home/ubuntu/cursor_file/100.論文/社会心理学/2026-02-04 UnHype_ CLIP-Guided Hypernetworks for Dynamic LoRA Unlearning.pdf",
+    "language": "en",
+    "source": "arXiv"
+  },
+  "2761d86d1c393673e0fdad4067cfd044": {
+    "title": "Addressing the World War 2 Warm Anomaly in HadSST.4.2.0.0",
+    "date": "2026-02-04",
+    "file": "/home/ubuntu/cursor_file/100.論文/社会心理学/2026-02-04 Addressing the World War 2 Warm Anomaly in HadSST.4.2.0.0.pdf",
+    "language": "ja",
+    "source": "arXiv"
+  },
+  "075bd8d8bfed7881b8d35aff1667d6ba": {
+    "title": "The Personality Trap: How LLMs Embed Bias When Generating Human-Like Personas",
+    "date": "2026-02-04",
+    "file": "/home/ubuntu/cursor_file/100.論文/社会心理学/2026-02-04 The Personality Trap_ How LLMs Embed Bias When Generating Human-Like Personas.pdf",
+    "language": "ja",
+    "source": "arXiv"
   }
 }
