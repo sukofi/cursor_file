@@ -244,5 +244,20 @@
     "date": "2026-02-05",
     "theme": "人工知能",
     "filename": "2026-02-05 群進化エージェント：経験共有による開放型自己改善.md"
+  },
+  "f0bd834d274ef3d33ea1b35c5d96643c": {
+    "title": "Are AI Capabilities Increasing Exponentially? A Competing Hypothesis",
+    "arxiv_id": "2602.04836v1",
+    "added_date": "2026-02-05"
+  },
+  "429017111a2b9e7937a2b52d891872cf": {
+    "title": "It's not a Lottery, it's a Race: Understanding How Gradient Descent Adapts the Network's Capacity to the Task",
+    "arxiv_id": "2602.04832v1",
+    "added_date": "2026-02-05"
+  },
+  "1e51eb8bab39ef71cc804dcb85fe675b": {
+    "title": "Safe Urban Traffic Control via Uncertainty-Aware Conformal Prediction and World-Model Reinforcement Learning",
+    "arxiv_id": "2602.04821v1",
+    "added_date": "2026-02-05"
   }
 }
