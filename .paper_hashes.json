@@ -244,5 +244,44 @@
       "ポリシー勾配",
       "テキストから画像生成"
     ]
+  },
+  "06af8dcfcd58d527680e521461029792": {
+    "title": "Approaches to Semantic Textual Similarity in Slovak Language: From Algorithms to Transformers",
+    "date": "2026-02-04",
+    "theme": "人工知能",
+    "filename": "2026-02-04 Approaches to Semantic Textual Similarity in Slovak Language From Algorithms to Transformers.md",
+    "tags": [
+      "意味的文章類似度",
+      "スロバキア語",
+      "自然言語処理",
+      "機械学習",
+      "深層学習"
+    ]
+  },
+  "509ab3975a82706f3afb98bf655c0f62": {
+    "title": "Towards Structured, State-Aware, and Execution-Grounded Reasoning for Software Engineering Agents",
+    "date": "2026-02-04",
+    "theme": "人工知能",
+    "filename": "2026-02-04 Towards Structured, State-Aware, and Execution-Grounded Reasoning for Software Engineering Agents.md",
+    "tags": [
+      "ソフトウェアエンジニアリング",
+      "エージェント",
+      "状態管理",
+      "推論モデル",
+      "実行フィードバック"
+    ]
+  },
+  "1b46e4078bc2c971984d547b04177dd7": {
+    "title": "WideSeek-R1: Exploring Width Scaling for Broad Information Seeking via Multi-Agent Reinforcement Learning",
+    "date": "2026-02-04",
+    "theme": "人工知能",
+    "filename": "2026-02-04 WideSeek-R1 Exploring Width Scaling for Broad Information Seeking via Multi-Agent Reinforcement.md",
+    "tags": [
+      "多エージェント強化学習",
+      "大規模言語モデル",
+      "情報探索",
+      "幅方向拡張",
+      "並列処理"
+    ]
   }
 }
