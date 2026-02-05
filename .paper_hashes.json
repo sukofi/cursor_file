@@ -55,5 +55,26 @@
     "title": "Can Theory-Informed Message Framing Drive Honest and Motivated Performance with Better Assessment Experiences in a Remote Assessment?",
     "date": "2026-02-05",
     "theme": "発達心理学"
+  },
+  "16355ec6e480bbd68ecbd70b18223809": {
+    "title": "DELTA: Deliberative Multi-Agent Reasoning with Reinforcement Learning for Multimodal Psychological Counseling",
+    "translated_title": "DELTA：マルチモーダル心理カウンセリングのための強化学習を用いた熟慮型マルチエージェント推論",
+    "date": "2026-02-05",
+    "theme": "発達心理学",
+    "filename": "2026-02-05 DELTA：マルチモーダル心理カウンセリングのための強化学習を用いた熟慮型マルチエージェント推論.md"
+  },
+  "f9c9064c8f88877076535d5b66dde299": {
+    "title": "The Personality Trap: How LLMs Embed Bias When Generating Human-Like Personas",
+    "translated_title": "パーソナリティの罠：LLMが人間らしいペルソナを生成する際にバイアスを内包する仕組み",
+    "date": "2026-02-05",
+    "theme": "発達心理学",
+    "filename": "2026-02-05 パーソナリティの罠：LLMが人間らしいペルソナを生成する際にバイアスを内包する仕組み.md"
+  },
+  "94c43d70b898a48ef7e35c6678d2b7e1": {
+    "title": "StepScorer: Accelerating Reinforcement Learning with Step-wise Scoring and Psychological Regret Modeling",
+    "translated_title": "StepScorer：ステップごとのスコアリングと心理的後悔モデリングによる強化学習の加速化",
+    "date": "2026-02-05",
+    "theme": "発達心理学",
+    "filename": "2026-02-05 StepScorer：ステップごとのスコアリングと心理的後悔モデリングによる強化学習の加速化.md"
   }
 }
