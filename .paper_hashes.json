@@ -202,5 +202,47 @@
     "date": "2026-02-05",
     "theme": "人工知能",
     "filename": "2026-02-05 El Agente Estructural：人工知能による分子編集エージェント.md"
+  },
+  "f081e0de78ce83763ea9a9d7e74710a0": {
+    "title": "Fluid Representations in Reasoning Models",
+    "translated_title": "推論モデルにおける流動的表現",
+    "tags": [
+      "推論モデル",
+      "抽象表現",
+      "言語モデル",
+      "計画問題",
+      "表現学習"
+    ],
+    "date": "2026-02-05",
+    "theme": "人工知能",
+    "filename": "2026-02-05 推論モデルにおける流動的表現.md"
+  },
+  "123e0a65a4231e592dfe2c0ade7d7248": {
+    "title": "Vivifying LIME: Visual Interactive Testbed for LIME Analysis",
+    "translated_title": "LIMEを活性化する：LIME解析のための視覚的インタラクティブテストベッド",
+    "tags": [
+      "説明可能AI",
+      "LIME",
+      "インタラクティブ可視化",
+      "モデル解釈",
+      "ユーザーインタフェース"
+    ],
+    "date": "2026-02-05",
+    "theme": "人工知能",
+    "filename": "2026-02-05 LIMEを活性化する：LIME解析のための視覚的インタラクティブテストベッド.md"
+  },
+  "52934b49c4c5b6959f6dec178aa87a53": {
+    "title": "Group-Evolving Agents: Open-Ended Self-Improvement via Experience Sharing",
+    "translated_title": "群進化エージェント：経験共有による開放型自己改善",
+    "tags": [
+      "自己改善エージェント",
+      "進化型アルゴリズム",
+      "経験共有",
+      "多様性の活用",
+      "コーディングベンチマーク"
+    ],
+    "date": "2026-02-05",
+    "theme": "人工知能",
+    "filename": "2026-02-05 群進化エージェント：経験共有による開放型自己改善.md"
   }
 }
