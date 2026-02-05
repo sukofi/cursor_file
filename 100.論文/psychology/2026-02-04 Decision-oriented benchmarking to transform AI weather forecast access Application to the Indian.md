@@ -1,0 +1,12 @@
+# Decision-oriented benchmarking to transform AI weather forecast access: Application to the Indian monsoon
+
+## 基本情報
+- **著者**: Rajat Masiwal, Colin Aitken, Adam Marchakitus, Mayank Gupta, Katherine Kowal, Hamid A. Pahlavan, Tyler Yang, Y. Qiang Sun, Michael Kremer, Amir Jina, William R. Boos, Pedram Hassanzadeh
+- **文献URL**: [http://arxiv.org/abs/2602.03767v1](http://arxiv.org/abs/2602.03767v1)
+- **取得日**: 2026-02-04
+
+## アブストラクト（日本語訳）
+人工知能気象予測（AIWP）モデルは、従来の物理ベースのモデルよりも一般的な指標においてしばしば優れた性能を示す一方で、必要とする計算資源や時間は桁違いに少なくて済みます。そのため、オープンアクセスのAIWPモデルは、高影響の気象ショックに直面する低・中所得層の意思決定を支援する変革的なツールとして期待されています。しかし、現状のAIWPモデル評価は主に気象学的指標の集約値に着目しており、意思決定志向の現場運用フレームワークにおける地域の利害関係者のニーズを考慮していません。本研究では、気象学、人工知能、社会科学を統合した意思決定志向の評価フレームワークを提案します。例として、インドのモンスーン予測という150年以上の課題に適用し、気候変動に極めて影響されやすい雨依存型農業への利益に焦点を当てました。AIWPモデルは、地域スケールで農業に関連するモンスーン開始指数を数週間前に適切に予測し、決定論的および確率論的指標を用いたアウト・オブ・サンプル評価で高い技能を示しました。このフレームワークは2025年に政府主導の取り組みとして、モンスーンの進行が数週間にわたり異常な停滞を見せた事象を的確に捉えたAIベースのモンスーン開始予測を3800万人のインド農家に提供することに貢献しました。本研究が提案する意思決定志向のベンチマークフレームワークは、気候変動下における気象ショックへの適応を支援するために、AIWPモデルの力を大規模な脆弱人口に活用するための設計図の重要な要素となります。
+
+## 原文（Abstract）
+Artificial intelligence weather prediction (AIWP) models now often outperform traditional physics-based models on common metrics while requiring orders-of-magnitude less computing resources and time. Open-access AIWP models thus hold promise as transformational tools for helping low- and middle-income populations make decisions in the face of high-impact weather shocks. Yet, current approaches to evaluating AIWP models focus mainly on aggregated meteorological metrics without considering local stakeholders' needs in decision-oriented, operational frameworks. Here, we introduce such a framework that connects meteorology, AI, and social sciences. As an example, we apply it to the 150-year-old problem of Indian monsoon forecasting, focusing on benefits to rain-fed agriculture, which is highly susceptible to climate change. AIWP models skillfully predict an agriculturally relevant onset index at regional scales weeks in advance when evaluated out-of-sample using deterministic and probabilistic metrics. This framework informed a government-led effort in 2025 to send 38 million Indian farmers AI-based monsoon onset forecasts, which captured an unusual weeks-long pause in monsoon progression. This decision-oriented benchmarking framework provides a key component of a blueprint for harnessing the power of AIWP models to help large vulnerable populations adapt to weather shocks in the face of climate variability and change.
