@@ -145,5 +145,26 @@
     "date": "2026-02-04",
     "theme": "社会心理学",
     "filename": "2026-02-04 StepScorer Accelerating Reinforcement Learning with Step-wise Scoring and Psychological Regret.pdf"
+  },
+  "bedb94b7ac9ce16881c3cb6663b6370e": {
+    "title": "PAMAS: Self-Adaptive Multi-Agent System with Perspective Aggregation for Misinformation Detection",
+    "date": "2026-02-04",
+    "theme": "社会心理学",
+    "filename": "2026-02-04 PAMAS Self-Adaptive Multi-Agent System with Perspective Aggregation for Misinformation Detection.md",
+    "type": "markdown"
+  },
+  "87b4f3997e0500e66fa04f0c3eb052a4": {
+    "title": "Behind the Feed: A Taxonomy of User-Facing Cues for Algorithmic Transparency in Social Media",
+    "date": "2026-02-04",
+    "theme": "社会心理学",
+    "filename": "2026-02-04 Behind the Feed A Taxonomy of User-Facing Cues for Algorithmic Transparency in Social Media.md",
+    "type": "markdown"
+  },
+  "9ceee568b2a6bc152bfb46ad89727074": {
+    "title": "One Model, All Roles: Multi-Turn, Multi-Agent Self-Play Reinforcement Learning for Conversational Social Intelligence",
+    "date": "2026-02-04",
+    "theme": "社会心理学",
+    "filename": "2026-02-04 One Model, All Roles Multi-Turn, Multi-Agent Self-Play Reinforcement Learning for Conversational.md",
+    "type": "markdown"
   }
 }
