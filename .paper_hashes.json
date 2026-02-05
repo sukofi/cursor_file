@@ -205,5 +205,44 @@
       "分布学習",
       "解釈可能性"
     ]
+  },
+  "1c5b410b77467057485129d0d9092303": {
+    "title": "Overstating Attitudes, Ignoring Networks: LLM Biases in Simulating Misinformation Susceptibility",
+    "date": "2026-02-04",
+    "theme": "人工知能",
+    "filename": "2026-02-04 Overstating Attitudes, Ignoring Networks LLM Biases in Simulating Misinformation Susceptibility.md",
+    "tags": [
+      "大規模言語モデル",
+      "誤情報",
+      "社会調査",
+      "バイアス",
+      "人間判断"
+    ]
+  },
+  "9bd66de58294620f15a892345eb84e42": {
+    "title": "Delving into Muon and Beyond: Deep Analysis and Extensions",
+    "date": "2026-02-04",
+    "theme": "人工知能",
+    "filename": "2026-02-04 Delving into Muon and Beyond Deep Analysis and Extensions.md",
+    "tags": [
+      "最適化アルゴリズム",
+      "スペクトル解析",
+      "Muオン最適化",
+      "適応学習率",
+      "深層学習"
+    ]
+  },
+  "53d6cb1829364703c17380b29faad778": {
+    "title": "Rethinking the Design Space of Reinforcement Learning for Diffusion Models: On the Importance of Likelihood Estimation Beyond Loss Design",
+    "date": "2026-02-04",
+    "theme": "人工知能",
+    "filename": "2026-02-04 Rethinking the Design Space of Reinforcement Learning for Diffusion Models On the Importance of.md",
+    "tags": [
+      "強化学習",
+      "拡散モデル",
+      "尤度推定",
+      "ポリシー勾配",
+      "テキストから画像生成"
+    ]
   }
 }
