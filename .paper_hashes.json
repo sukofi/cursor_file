@@ -1,59 +1,59 @@
 {
   "24b0a9391205070f8e66975dc3fa9d0b": {
     "title": "DRMOT: A Dataset and Framework for RGBD Referring Multi-Object Tracking",
-    "translated_title": "DRMOT\uff1aRGBD\u8a00\u53ca\u578b\u8907\u6570\u7269\u4f53\u8ffd\u8de1\u306e\u305f\u3081\u306e\u30c7\u30fc\u30bf\u30bb\u30c3\u30c8\u3068\u30d5\u30ec\u30fc\u30e0\u30ef\u30fc\u30af",
+    "translated_title": "DRMOT:RGBD言及型複数物体追跡のためのデータセットとフレームワーク",
     "date": "2026-02-04",
-    "theme": "\u4eba\u5de5\u77e5\u80fd",
-    "filename": "2026-02-04 DRMOT\uff1aRGBD\u8a00\u53ca\u578b\u8907\u6570\u7269\u4f53\u8ffd\u8de1\u306e\u305f\u3081\u306e\u30c7\u30fc\u30bf\u30bb\u30c3\u30c8\u3068\u30d5\u30ec\u30fc\u30e0\u30ef\u30fc\u30af.md",
+    "theme": "人工知能",
+    "filename": "2026-02-04 DRMOT:RGBD言及型複数物体追跡のためのデータセットとフレームワーク.md",
     "tags": [
-      "\u8907\u6570\u7269\u4f53\u8ffd\u8de1",
-      "RGBD\u30bb\u30f3\u30b5\u30fc",
-      "\u8a00\u8a9e\u6307\u793a\u8ffd\u8de1",
-      "3\u6b21\u5143\u7a7a\u9593\u8a8d\u8b58",
-      "\u6df1\u5ea6\u60c5\u5831\u878d\u5408"
+      "複数物体追跡",
+      "RGBDセンサー",
+      "言語指示追跡",
+      "3次元空間認識",
+      "深度情報融合"
     ]
   },
   "dfb3179ad9be8fefbfc9f90d2c87a0b6": {
     "title": "Audio ControlNet for Fine-Grained Audio Generation and Editing",
-    "translated_title": "\u7d30\u7c92\u5ea6\u306a\u97f3\u58f0\u751f\u6210\u3068\u7de8\u96c6\u306e\u305f\u3081\u306eAudio ControlNet",
+    "translated_title": "細粒度な音声生成と編集のためのAudio ControlNet",
     "date": "2026-02-04",
-    "theme": "\u4eba\u5de5\u77e5\u80fd",
-    "filename": "2026-02-04 \u7d30\u7c92\u5ea6\u306a\u97f3\u58f0\u751f\u6210\u3068\u7de8\u96c6\u306e\u305f\u3081\u306eAudio ControlNet.md",
+    "theme": "人工知能",
+    "filename": "2026-02-04 細粒度な音声生成と編集のためのAudio ControlNet.md",
     "tags": [
-      "\u97f3\u58f0\u751f\u6210",
-      "\u97f3\u58f0\u7de8\u96c6",
-      "\u5236\u5fa1\u53ef\u80fd\u751f\u6210",
-      "\u30c6\u30ad\u30b9\u30c8\u97f3\u58f0\u5909\u63db",
+      "音声生成",
+      "音声編集",
+      "制御可能生成",
+      "テキスト音声変換",
       "ControlNet"
     ]
   },
   "613bd456d76c42b5c98815e09b90dfb3": {
     "title": "Let Experts Feel Uncertainty: A Multi-Expert Label Distribution Approach to Probabilistic Time Series Forecasting",
-    "translated_title": "\u5c02\u9580\u5bb6\u306b\u4e0d\u78ba\u5b9f\u6027\u3092\u611f\u3058\u3055\u305b\u308b\uff1a\u78ba\u7387\u7684\u6642\u7cfb\u5217\u4e88\u6e2c\u306e\u305f\u3081\u306e\u30de\u30eb\u30c1\u30a8\u30ad\u30b9\u30d1\u30fc\u30c8\u30e9\u30d9\u30eb\u5206\u5e03\u30a2\u30d7\u30ed\u30fc\u30c1",
+    "translated_title": "専門家に不確実性を感じさせる:確率的時系列予測のためのマルチエキスパートラベル分布アプローチ",
     "date": "2026-02-04",
-    "theme": "\u4eba\u5de5\u77e5\u80fd",
-    "filename": "2026-02-04 \u5c02\u9580\u5bb6\u306b\u4e0d\u78ba\u5b9f\u6027\u3092\u611f\u3058\u3055\u305b\u308b\uff1a\u78ba\u7387\u7684\u6642\u7cfb\u5217\u4e88\u6e2c\u306e\u305f\u3081\u306e\u30de\u30eb\u30c1\u30a8\u30ad\u30b9\u30d1\u30fc\u30c8\u30e9\u30d9\u30eb\u5206\u5e03\u30a2\u30d7\u30ed\u30fc\u30c1.md",
+    "theme": "人工知能",
+    "filename": "2026-02-04 専門家に不確実性を感じさせる:確率的時系列予測のためのマルチエキスパートラベル分布アプローチ.md",
     "tags": [
-      "\u6642\u7cfb\u5217\u4e88\u6e2c",
-      "\u4e0d\u78ba\u5b9f\u6027\u5b9a\u91cf\u5316",
-      "\u30de\u30eb\u30c1\u30a8\u30ad\u30b9\u30d1\u30fc\u30c8\u5b66\u7fd2",
-      "\u5206\u5e03\u5b66\u7fd2",
-      "\u89e3\u91c8\u53ef\u80fd\u6027"
+      "時系列予測",
+      "不確実性定量化",
+      "マルチエキスパート学習",
+      "分布学習",
+      "解釈可能性"
     ]
   },
   "aac45f58369b71c6881cefe0ec90f6c4": {
     "title": "Inference-Time Reasoning Selectively Reduces Implicit Social Bias in Large Language Models",
     "date": "2026-02-05",
-    "theme": "\u767a\u9054\u5fc3\u7406\u5b66"
+    "theme": "発達心理学"
   },
   "f4df839418048eed66a35f41a120243c": {
     "title": "AI in Education Beyond Learning Outcomes: Cognition, Agency, Emotion, and Ethics",
     "date": "2026-02-05",
-    "theme": "\u767a\u9054\u5fc3\u7406\u5b66"
+    "theme": "発達心理学"
   },
   "808e03db06a4addba64fa447bd3dfa71": {
     "title": "Can Theory-Informed Message Framing Drive Honest and Motivated Performance with Better Assessment Experiences in a Remote Assessment?",
     "date": "2026-02-05",
-    "theme": "\u767a\u9054\u5fc3\u7406\u5b66"
+    "theme": "発達心理学"
   }
 }
