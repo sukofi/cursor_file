@@ -166,5 +166,122 @@
     "theme": "社会心理学",
     "filename": "2026-02-04 One Model, All Roles Multi-Turn, Multi-Agent Self-Play Reinforcement Learning for Conversational.md",
     "type": "markdown"
+  },
+  "24b0a9391205070f8e66975dc3fa9d0b": {
+    "title": "DRMOT: A Dataset and Framework for RGBD Referring Multi-Object Tracking",
+    "date": "2026-02-04",
+    "theme": "人工知能",
+    "filename": "2026-02-04 DRMOT A Dataset and Framework for RGBD Referring Multi-Object Tracking.md",
+    "tags": [
+      "参照型多対象追跡",
+      "RGBDデータセット",
+      "深度情報融合",
+      "自然言語処理",
+      "空間認識"
+    ]
+  },
+  "dfb3179ad9be8fefbfc9f90d2c87a0b6": {
+    "title": "Audio ControlNet for Fine-Grained Audio Generation and Editing",
+    "date": "2026-02-04",
+    "theme": "人工知能",
+    "filename": "2026-02-04 Audio ControlNet for Fine-Grained Audio Generation and Editing.md",
+    "tags": [
+      "テキスト音声合成",
+      "制御可能生成",
+      "音響イベント編集",
+      "ControlNet",
+      "ディープラーニング"
+    ]
+  },
+  "613bd456d76c42b5c98815e09b90dfb3": {
+    "title": "Let Experts Feel Uncertainty: A Multi-Expert Label Distribution Approach to Probabilistic Time Series Forecasting",
+    "date": "2026-02-04",
+    "theme": "人工知能",
+    "filename": "2026-02-04 Let Experts Feel Uncertainty A Multi-Expert Label Distribution Approach to Probabilistic Time.md",
+    "tags": [
+      "時系列予測",
+      "不確実性定量化",
+      "多専門家学習",
+      "分布学習",
+      "解釈可能性"
+    ]
+  },
+  "1c5b410b77467057485129d0d9092303": {
+    "title": "Overstating Attitudes, Ignoring Networks: LLM Biases in Simulating Misinformation Susceptibility",
+    "date": "2026-02-04",
+    "theme": "人工知能",
+    "filename": "2026-02-04 Overstating Attitudes, Ignoring Networks LLM Biases in Simulating Misinformation Susceptibility.md",
+    "tags": [
+      "大規模言語モデル",
+      "誤情報",
+      "社会調査",
+      "バイアス",
+      "人間判断"
+    ]
+  },
+  "9bd66de58294620f15a892345eb84e42": {
+    "title": "Delving into Muon and Beyond: Deep Analysis and Extensions",
+    "date": "2026-02-04",
+    "theme": "人工知能",
+    "filename": "2026-02-04 Delving into Muon and Beyond Deep Analysis and Extensions.md",
+    "tags": [
+      "最適化アルゴリズム",
+      "スペクトル解析",
+      "Muオン最適化",
+      "適応学習率",
+      "深層学習"
+    ]
+  },
+  "53d6cb1829364703c17380b29faad778": {
+    "title": "Rethinking the Design Space of Reinforcement Learning for Diffusion Models: On the Importance of Likelihood Estimation Beyond Loss Design",
+    "date": "2026-02-04",
+    "theme": "人工知能",
+    "filename": "2026-02-04 Rethinking the Design Space of Reinforcement Learning for Diffusion Models On the Importance of.md",
+    "tags": [
+      "強化学習",
+      "拡散モデル",
+      "尤度推定",
+      "ポリシー勾配",
+      "テキストから画像生成"
+    ]
+  },
+  "06af8dcfcd58d527680e521461029792": {
+    "title": "Approaches to Semantic Textual Similarity in Slovak Language: From Algorithms to Transformers",
+    "date": "2026-02-04",
+    "theme": "人工知能",
+    "filename": "2026-02-04 Approaches to Semantic Textual Similarity in Slovak Language From Algorithms to Transformers.md",
+    "tags": [
+      "意味的文章類似度",
+      "スロバキア語",
+      "自然言語処理",
+      "機械学習",
+      "深層学習"
+    ]
+  },
+  "509ab3975a82706f3afb98bf655c0f62": {
+    "title": "Towards Structured, State-Aware, and Execution-Grounded Reasoning for Software Engineering Agents",
+    "date": "2026-02-04",
+    "theme": "人工知能",
+    "filename": "2026-02-04 Towards Structured, State-Aware, and Execution-Grounded Reasoning for Software Engineering Agents.md",
+    "tags": [
+      "ソフトウェアエンジニアリング",
+      "エージェント",
+      "状態管理",
+      "推論モデル",
+      "実行フィードバック"
+    ]
+  },
+  "1b46e4078bc2c971984d547b04177dd7": {
+    "title": "WideSeek-R1: Exploring Width Scaling for Broad Information Seeking via Multi-Agent Reinforcement Learning",
+    "date": "2026-02-04",
+    "theme": "人工知能",
+    "filename": "2026-02-04 WideSeek-R1 Exploring Width Scaling for Broad Information Seeking via Multi-Agent Reinforcement.md",
+    "tags": [
+      "多エージェント強化学習",
+      "大規模言語モデル",
+      "情報探索",
+      "幅方向拡張",
+      "並列処理"
+    ]
   }
 }
