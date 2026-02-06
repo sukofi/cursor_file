@@ -259,5 +259,26 @@
     "title": "Safe Urban Traffic Control via Uncertainty-Aware Conformal Prediction and World-Model Reinforcement Learning",
     "arxiv_id": "2602.04821v1",
     "added_date": "2026-02-05"
+  },
+  "00d5f9c8f5bb089b9d02ab59351b04d5": {
+    "title": "MAMA-Memeia! Multi-Aspect Multi-Agent Collaboration for Depressive Symptoms Identification in Memes",
+    "translated_title": "MAMA-Memeia！ミームにおけるうつ症状識別のための多面多エージェント協働",
+    "date": "2026-02-06",
+    "theme": "臨床心理学",
+    "filename": "20260206_MAMA-Memeiaミームにおけるうつ症状識別のための多面多エージェント協働.md"
+  },
+  "460db5a767ae307ad8f8e65ed01fda4d": {
+    "title": "From Visual Perception to Deep Empathy: An Automated Assessment Framework for House-Tree-Person Drawings Using Multimodal LLMs and Multi-Agent Collaboration",
+    "translated_title": "視覚知覚から深層共感へ：マルチモーダルLLMとマルチエージェント協働による家-木-人描画の自動評価フレームワーク",
+    "date": "2026-02-06",
+    "theme": "臨床心理学",
+    "filename": "20260206_視覚知覚から深層共感へマルチモーダルLLMとマルチエージェント協働による家-木-人描画の自動評価フレ.md"
+  },
+  "6b7e7bbbc14fac4a69be133ddc924ca9": {
+    "title": "The Agony of Opacity: Foundations for Reflective Interpretability in AI-Mediated Mental Health Support",
+    "translated_title": "不透明性の苦悩：AI支援型メンタルヘルスサポートにおける反映的解釈可能性の基盤",
+    "date": "2026-02-06",
+    "theme": "臨床心理学",
+    "filename": "20260206_不透明性の苦悩AI支援型メンタルヘルスサポートにおける反映的解釈可能性の基盤.md"
   }
 }
