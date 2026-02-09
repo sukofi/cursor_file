@@ -63,7 +63,10 @@ out/
 .config/
 .continuum/
 .cups/
-.cursor/
+# Cursor: スキルのみ追跡
+.cursor/*
+!.cursor/skills/
+!.cursor/skills/**
 .docker/
 .dropbox/
 .dvdcss/
